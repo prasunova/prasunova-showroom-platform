@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Node / Cloudflare Worker
+node_modules/
+.wrangler/
+
+# Local test images (don't commit test uploads)
+user_image.jpg
+
+# OS
+.DS_Store
+Thumbs.db
+
+superpowers/

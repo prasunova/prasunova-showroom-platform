@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Your Showroom — Supraa</title>
+  <meta name="description" content="Register your tile showroom on Supraa. Get your branded link in 60 seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .auth-wrap { max-width:380px; margin:80px auto; padding:32px; border:1px solid var(--border); border-radius:12px; }
+    .auth-wrap h2 { margin-top:0; text-align:center; }
+    .form-row { margin-bottom:12px; display:flex; flex-direction:column; gap:4px; }
+    .form-row label { font-size:13px; color:var(--muted); }
+    .form-row input { padding:8px; border:1px solid var(--border); border-radius:4px; font-size:14px; width:100%; box-sizing:border-box; }
+    .slug-preview { font-size:12px; color:var(--muted); margin-top:4px; }
+    #reg-error { color:#e55; font-size:13px; min-height:18px; text-align:center; }
+    .auth-links { font-size:13px; text-align:center; margin-top:12px; }
+    .auth-links a { color:var(--brand-primary); text-decoration:none; }
+  </style>
+</head>
+<body>
+<div style="text-align:center;padding:20px 0 0;">
+  <a href="/" style="font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.5px;">← Back to Supraa Showroom</a>
+</div>
+<div class="auth-wrap" id="step1">
+  <h2>Create Your Showroom</h2>
+  <div class="form-row"><label>Shop Name</label><input id="shop-name" type="text" placeholder="e.g. Raj Tiles" /></div>
+  <div class="form-row">
+    <label>Shop URL Slug</label>
+    <input id="slug" type="text" placeholder="e.g. mansigranite" />
+    <div class="slug-preview">Your URL: showroom.supraa.in/s/?shop=<span id="slug-preview">...</span></div>
+  </div>
+  <div class="form-row"><label>Email</label><input id="reg-email" type="email" /></div>
+  <p id="reg-error"></p>
+  <button id="btn-send-otp" class="btn-primary" style="width:100%">Send Verification Code</button>
+  <div class="auth-links"><a href="index.html">Already have an account? Login</a></div>
+</div>
+
+<div class="auth-wrap" id="step2" style="display:none">
+  <h2>Verify Email</h2>
+  <p style="font-size:14px;text-align:center">Enter the 6-digit code sent to your email and set a password.</p>
+  <div class="form-row"><label>Verification Code</label><input id="otp-input" type="text" maxlength="6" placeholder="123456" /></div>
+  <div class="form-row"><label>Password (min 8 chars)</label><input id="reg-password" type="password" /></div>
+  <p id="otp-error" style="color:#e55;font-size:13px;min-height:18px;text-align:center"></p>
+  <button id="btn-verify" class="btn-primary" style="width:100%">Create Account</button>
+</div>
+
+<script type="module" src="register.js"></script>
+</body>
+</html>

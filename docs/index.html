@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supraa Showroom — AI Tile Visualizer for Your Store</title>
+  <meta name="description" content="Give your tile showroom a digital presence. Customers preview real granite and tile textures on real room photos — powered by AI. Free to start." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══ TOKENS ═══════════════════════════════════════════════════════════ */
+    :root {
+      --bg:          #0a0a0a;
+      --bg-2:        #111111;
+      --bg-3:        #1a1a1a;
+      --bg-glass:    rgba(255,255,255,0.04);
+      --border:      rgba(255,255,255,0.08);
+      --gold:        #c9a84c;
+      --gold-light:  #e8c97a;
+      --gold-dim:    rgba(201,168,76,0.12);
+      --gold-glow:   rgba(201,168,76,0.25);
+      --white:       #f0f0f0;
+      --muted:       #777;
+      --muted-2:     #555;
+      --radius:      14px;
+      --transition:  0.24s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ═══ SCROLLBAR ═══════════════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-2); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ═══ NAV ═════════════════════════════════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.80);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 28px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo-badge {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold) 0%, #8a6520 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px; color: #0a0a0a; letter-spacing: 0.5px;
+    }
+    .nav-logo-text { display: flex; flex-direction: column; }
+    .nav-logo-name { font-size: 15px; font-weight: 700; color: var(--white); line-height: 1.2; }
+    .nav-logo-sub  { font-size: 10px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; }
+
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-ghost {
+      padding: 8px 18px; border-radius: 8px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); font-family: inherit; font-size: 14px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center;
+      transition: var(--transition);
+    }
+    .btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.18); background: var(--bg-glass); }
+
+    .btn-cta {
+      padding: 9px 20px; border-radius: 8px;
+      background: var(--gold); border: none;
+      color: #0a0a0a; font-family: inherit; font-size: 14px; font-weight: 700;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: var(--transition);
+    }
+    .btn-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-cta:active { transform: translateY(0); }
+
+    /* ═══ HERO ════════════════════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* animated background grid */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: grid-drift 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes grid-drift {
+      0%   { background-position: 0 0; }
+      100% { background-position: 60px 60px; }
+    }
+
+    /* radial gold glow */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(201,168,76,0.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 820px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 20px;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: var(--gold-dim);
+      color: var(--gold); font-size: 13px; font-weight: 500;
+      margin-bottom: 28px;
+      animation: fade-up 0.6s ease both;
+    }
+    .hero-badge::before { content: '✦'; font-size: 10px; }
+
+    .hero-h1 {
+      font-size: clamp(36px, 6vw, 72px); font-weight: 800; line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      animation: fade-up 0.6s 0.1s ease both;
+    }
+    .hero-h1 .line-plain { display: block; color: var(--white); }
+    .hero-h1 .line-gold  {
+      display: block;
+      background: linear-gradient(100deg, var(--gold-light) 0%, var(--gold) 50%, #a07830 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px); color: var(--muted);
+      max-width: 580px; margin: 0 auto 44px;
+      font-weight: 400; line-height: 1.7;
+      animation: fade-up 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      animation: fade-up 0.6s 0.3s ease both;
+    }
+    .hero-btn-primary {
+      padding: 14px 32px; border-radius: 10px;
+      background: var(--gold); border: none;
+      color: #0a0a0a; font-family: inherit; font-size: 16px; font-weight: 700;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: var(--transition);
+      box-shadow: 0 0 32px var(--gold-glow);
+    }
+    .hero-btn-primary:hover {
+      background: var(--gold-light); transform: translateY(-2px);
+      box-shadow: 0 0 48px var(--gold-glow);
+    }
+    .hero-btn-secondary {
+      padding: 14px 32px; border-radius: 10px;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      color: var(--white); font-family: inherit; font-size: 16px; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+    .hero-btn-secondary:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .hero-note {
+      margin-top: 20px; font-size: 13px; color: var(--muted-2);
+      animation: fade-up 0.6s 0.4s ease both;
+    }
+
+    /* scroll cue */
+    .scroll-cue {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--muted-2); font-size: 12px; letter-spacing: 1px;
+      animation: fade-up 0.6s 0.8s ease both;
+      z-index: 1;
+    }
+    .scroll-arrow {
+      width: 18px; height: 18px;
+      border-right: 2px solid var(--muted-2);
+      border-bottom: 2px solid var(--muted-2);
+      transform: rotate(45deg);
+      animation: bounce-arrow 1.8s ease infinite;
+    }
+    @keyframes bounce-arrow {
+      0%, 100% { transform: rotate(45deg) translate(0,0); opacity: 1; }
+      50%       { transform: rotate(45deg) translate(4px,4px); opacity: 0.4; }
+    }
+
+    /* ═══ STATS BAR ════════════════════════════════════════════════════════ */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-2);
+      padding: 28px 24px;
+    }
+    .stats-inner {
+      max-width: 900px; margin: 0 auto;
+      display: flex; justify-content: center; gap: 64px; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 32px; font-weight: 800;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ═══ SECTION SHARED ═══════════════════════════════════════════════════ */
+    section { padding: 96px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+      line-height: 1.15; letter-spacing: -0.5px;
+      color: var(--white); margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--muted);
+      max-width: 560px; line-height: 1.75; margin-bottom: 56px;
+    }
+
+    /* ═══ HOW IT WORKS ═════════════════════════════════════════════════════ */
+    .how { background: var(--bg); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .step-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .step-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold-dim), transparent 60%);
+      opacity: 0; transition: var(--transition);
+    }
+    .step-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(201,168,76,0.12); }
+    .step-card:hover::before { opacity: 1; }
+    .step-num {
+      font-size: 48px; font-weight: 800; line-height: 1;
+      color: rgba(201,168,76,0.15);
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .step-icon { font-size: 28px; margin-bottom: 12px; }
+    .step-title { font-size: 16px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+    .step-desc  { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ═══ FEATURES ════════════════════════════════════════════════════════ */
+    .features { background: var(--bg-2); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      transition: var(--transition);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .feature-card:hover { border-color: rgba(201,168,76,0.3); background: var(--gold-dim); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .feature-title { font-size: 16px; font-weight: 600; color: var(--white); }
+    .feature-desc  { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ═══ URL DEMO SECTION ════════════════════════════════════════════════ */
+    .url-demo { background: var(--bg); }
+    .url-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      max-width: 720px;
+    }
+    .url-card-title { font-size: 14px; color: var(--muted); margin-bottom: 16px; font-weight: 500; }
+    .url-row {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 10px; font-size: 14px;
+      font-family: 'Courier New', monospace;
+    }
+    .url-row:last-child { margin-bottom: 0; }
+    .url-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .url-text { color: var(--muted); }
+    .url-text .slug { color: var(--gold); }
+    .url-badge {
+      margin-left: auto; flex-shrink: 0;
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px;
+      background: var(--gold-dim); color: var(--gold);
+      font-family: inherit; letter-spacing: 0.5px;
+    }
+
+    /* ═══ PRICING ══════════════════════════════════════════════════════════ */
+    .pricing { background: var(--bg-2); }
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; max-width: 820px;
+    }
+    .pricing-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      background: var(--bg-glass);
+      position: relative; overflow: hidden;
+      transition: var(--transition);
+    }
+    .pricing-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, transparent 60%);
+    }
+    .pricing-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute; top: 14px; right: -24px;
+      background: var(--gold); color: #0a0a0a;
+      font-size: 9px; font-weight: 800; letter-spacing: 1.5px;
+      padding: 4px 36px; transform: rotate(45deg);
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .plan-name  { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 12px; }
+    .plan-price { font-size: 40px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+    .plan-price span { font-size: 16px; font-weight: 400; color: var(--muted); }
+    .plan-desc  { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .plan-features li { font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+    .plan-features li::before { content: '✓'; color: var(--gold); font-weight: 700; }
+    .btn-plan {
+      width: 100%; padding: 12px; border-radius: 8px;
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      cursor: pointer; text-decoration: none; display: block; text-align: center;
+      transition: var(--transition);
+    }
+    .btn-plan-outline {
+      background: transparent; border: 1px solid var(--border); color: var(--white);
+    }
+    .btn-plan-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-plan-gold {
+      background: var(--gold); border: none; color: #0a0a0a;
+      box-shadow: 0 0 24px var(--gold-glow);
+    }
+    .btn-plan-gold:hover { background: var(--gold-light); }
+
+    /* ═══ CTA STRIP ════════════════════════════════════════════════════════ */
+    .cta-strip {
+      background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center; padding: 80px 24px;
+    }
+    .cta-strip h2 { font-size: clamp(24px, 3.5vw, 40px); font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+    .cta-strip p  { font-size: 17px; color: var(--muted); margin-bottom: 36px; }
+
+    /* ═══ FOOTER ═══════════════════════════════════════════════════════════ */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand { font-size: 14px; color: var(--muted); }
+    .footer-brand strong { color: var(--gold); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; transition: var(--transition); }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ═══ ANIMATIONS ═══════════════════════════════════════════════════════ */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ RESPONSIVE ═══════════════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      .hero { padding: 100px 20px 72px; }
+      .stats-inner { gap: 36px; }
+      .nav-actions .btn-ghost { display: none; }
+      .footer-inner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-badge">SS</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">Supraa Showroom</span>
+        <span class="nav-logo-sub">Tile Visualizer</span>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <a href="/s/?shop=demo" class="btn-ghost" id="nav-demo">View Demo</a>
+      <a href="/admin/" class="btn-ghost" id="nav-login">Login</a>
+      <a href="/admin/register.html" class="btn-cta" id="nav-register">Get Started →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">AI-powered · $0/month · Ready in minutes</div>
+
+    <h1 class="hero-h1">
+      <span class="line-plain">Your Tile Showroom,</span>
+      <span class="line-gold">Now Online.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Let customers see your granite, marble, and tile products in their own rooms — 
+      before they visit your store. No app. No code. Just a link.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/admin/register.html" class="hero-btn-primary" id="hero-cta-register">
+        Create Your Showroom →
+      </a>
+      <a href="/s/?shop=demo" class="hero-btn-secondary" id="hero-cta-demo">
+        ▶ View Live Demo
+      </a>
+    </div>
+
+    <p class="hero-note">No credit card required · Free forever for small showrooms</p>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ══════════════════════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat reveal">
+      <div class="stat-num">AI</div>
+      <div class="stat-label">SAM 3 Segmentation</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-num">&lt;100ms</div>
+      <div class="stat-label">Tile render time</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Tiles per showroom</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-num">₹0</div>
+      <div class="stat-label">Monthly cost</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HOW IT WORKS ════════════════════════════════════════════════════════════ -->
+<section class="how">
+  <div class="section-inner">
+    <span class="section-tag reveal">How It Works</span>
+    <h2 class="section-title reveal">Up and running in 4 steps.</h2>
+    <p class="section-sub reveal">No developers. No integrations. Just sign up and share your link.</p>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">🏪</div>
+        <div class="step-title">Create your showroom</div>
+        <div class="step-desc">Register in 60 seconds. You get a unique link — <code style="color:var(--gold)">showroom.supraa.in/s/?shop=yourstore</code></div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">02</div>
+        <div class="step-icon">🖼️</div>
+        <div class="step-title">Upload your tile catalog</div>
+        <div class="step-desc">Add tile photos from your admin panel. They appear instantly in your showroom — no AI wait time.</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">03</div>
+        <div class="step-icon">🤖</div>
+        <div class="step-title">AI segments the rooms</div>
+        <div class="step-desc">Our SAM 3 AI automatically detects floors and walls in room photos. Runs once, renders in milliseconds forever.</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">04</div>
+        <div class="step-icon">📤</div>
+        <div class="step-title">Share with customers</div>
+        <div class="step-desc">Send your showroom link. Customers pick a tile, see it on their own uploaded room photo, and download the result.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ════════════════════════════════════════════════════════════════ -->
+<section class="features">
+  <div class="section-inner">
+    <span class="section-tag reveal">Platform Features</span>
+    <h2 class="section-title reveal">Everything a tile showroom needs.</h2>
+    <p class="section-sub reveal">Built specifically for granite, marble, vitrified, ceramic, and anti-skid tile retailers.</p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Real-time canvas rendering</div>
+        <div class="feature-desc">Tile textures are applied directly on the room photo using HTML5 Canvas. No server round-trip — changes are instant.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Customer uploads their room</div>
+        <div class="feature-desc">Customers can upload a photo of their own kitchen, bathroom, or living room. AI segments it automatically.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🏷️</div>
+        <div class="feature-title">Full tile catalog management</div>
+        <div class="feature-desc">Add, price, and categorise your tiles from the admin panel. Show price per sq.ft., finish, and size options.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⬇️</div>
+        <div class="feature-title">Download & share results</div>
+        <div class="feature-desc">Customers download their visualized room as a JPEG or share the link directly. Great for WhatsApp sharing.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Isolated per showroom</div>
+        <div class="feature-desc">Every shop owner's tiles are private to their showroom. Customers only see what you've uploaded.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Zero infrastructure cost</div>
+        <div class="feature-desc">Hosted on GitHub Pages + Cloudflare R2 + GitHub Actions. The free tiers cover most showrooms completely.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ URL DEMO ═════════════════════════════════════════════════════════════════ -->
+<section class="url-demo">
+  <div class="section-inner">
+    <span class="section-tag reveal">Your Branded Link</span>
+    <h2 class="section-title reveal">One link. Infinite tiles.</h2>
+    <p class="section-sub reveal">
+      Each showroom gets a unique URL. Share it on WhatsApp, Instagram bio, 
+      or your visiting card. The <code style="color:var(--gold);font-size:15px">/s/</code> path keeps your showroom direct-access-only.
+    </p>
+
+    <div class="url-card reveal">
+      <div class="url-card-title">Examples of your showroom links:</div>
+      <div class="url-row">
+        <div class="url-dot"></div>
+        <div class="url-text">showroom.supraa.in/s/?shop=<span class="slug">mansigranite</span></div>
+        <div class="url-badge">Mansi Granite</div>
+      </div>
+      <div class="url-row">
+        <div class="url-dot"></div>
+        <div class="url-text">showroom.supraa.in/s/?shop=<span class="slug">rajtilesdelhi</span></div>
+        <div class="url-badge">Raj Tiles</div>
+      </div>
+      <div class="url-row">
+        <div class="url-dot"></div>
+        <div class="url-text">showroom.supraa.in/s/?shop=<span class="slug">goldengranite</span></div>
+        <div class="url-badge">Golden Granite</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ══════════════════════════════════════════════════════════════════ -->
+<section class="pricing">
+  <div class="section-inner">
+    <span class="section-tag reveal">Pricing</span>
+    <h2 class="section-title reveal">Honest, simple pricing.</h2>
+    <p class="section-sub reveal">Start free. Upgrade when your business grows.</p>
+
+    <div class="pricing-cards">
+      <div class="pricing-card reveal">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">₹0 <span>/month</span></div>
+        <div class="plan-desc">Perfect for small showrooms getting started.</div>
+        <ul class="plan-features">
+          <li>Up to 50 tiles in your catalog</li>
+          <li>Shared room catalog (8 rooms)</li>
+          <li>50 customer uploads/day</li>
+          <li>Download &amp; share results</li>
+          <li>Branded showroom URL</li>
+        </ul>
+        <a href="/admin/register.html" class="btn-plan btn-plan-outline" id="pricing-free-cta">Get Started Free</a>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">₹999 <span>/month</span></div>
+        <div class="plan-desc">For established showrooms wanting more control.</div>
+        <ul class="plan-features">
+          <li>Unlimited tiles</li>
+          <li>Upload your own room photos</li>
+          <li>Priority AI segmentation</li>
+          <li>Custom room catalog</li>
+          <li>Analytics dashboard</li>
+          <li>WhatsApp share integration</li>
+        </ul>
+        <a href="/admin/register.html" class="btn-plan btn-plan-gold" id="pricing-pro-cta">Start Pro Trial →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA STRIP ════════════════════════════════════════════════════════════════ -->
+<div class="cta-strip">
+  <h2 class="reveal">Ready to go digital?</h2>
+  <p class="reveal">Your tile showroom can be live in under 5 minutes.</p>
+  <a href="/admin/register.html" class="hero-btn-primary reveal" id="footer-cta-register">
+    Create Your Free Showroom →
+  </a>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      Built by <strong>Supraa</strong> · showroom.supraa.in
+    </div>
+    <div class="footer-links">
+      <a href="/s/?shop=demo" id="footer-demo">Demo Showroom</a>
+      <a href="/admin/" id="footer-admin">Admin Login</a>
+      <a href="/admin/register.html" id="footer-register">Register</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
