@@ -12,6 +12,13 @@ node_modules/
 # Local test images (don't commit test uploads)
 user_image.jpg
 
+# Sample/room photos — these live in Cloudflare R2, not git
+sample_photos/
+
+# Build artifacts / archives
+*.zip
+*.tar.gz
+
 # OS
 .DS_Store
 Thumbs.db
