@@ -27,7 +27,7 @@ async function loadDashboard() {
   document.getElementById('admin-section').style.display  = 'block';
   document.getElementById('admin-shop-name').textContent  = prof.shopName;
   document.getElementById('edit-shop-name').value = prof.shopName;
-  document.getElementById('admin-slug').textContent       = `showroom.supraa.in/s/?shop=${prof.slug}`;
+  document.getElementById('admin-slug').textContent       = `showroom.prasunova.in/s/?shop=${prof.slug}`;
   document.getElementById('tiles-count').textContent      = `(${(tiles.tiles||[]).length})`;
 
   renderTiles(tiles.tiles || []);
