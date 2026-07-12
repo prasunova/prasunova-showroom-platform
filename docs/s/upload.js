@@ -1,4 +1,4 @@
-import { API_BASE } from '../config.js';
+import { API_BASE, TURNSTILE_SITE_KEY } from '../config.js';
 
 const POLL_INTERVAL_MS = 30_000;
 const TIMEOUT_MS       = 20 * 60 * 1000;
@@ -60,7 +60,7 @@ async function checkReady(hash) {
 
 btnProcess.addEventListener('click', async () => {
   if (!selectedFile || !slug) return;
-  if (!turnstileToken) {
+  if (TURNSTILE_SITE_KEY && !turnstileToken) {
     showError('Verification required', 'Please wait for the security check to complete.');
     return;
   }
