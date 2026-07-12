@@ -3,7 +3,7 @@
 A generic, multi-tenant digital showroom platform. Any tile or granite store signs up, uploads their catalog, and instantly gets a branded visualizer at:
 
 ```
-https://showroom.prasunova.in/s/?shop=<their-slug>
+https://showroom.prasunova.com/s/?shop=<their-slug>
 ```
 
 No code required. No per-client deployments. **One codebase, infinite showrooms.**
@@ -14,10 +14,10 @@ No code required. No per-client deployments. **One codebase, infinite showrooms.
 
 | URL | Purpose |
 |-----|---------|
-| `showroom.prasunova.in/` | Marketing landing page |
-| `showroom.prasunova.in/admin/` | Shop owner login & tile management |
-| `showroom.prasunova.in/admin/register.html` | New showroom registration |
-| `showroom.prasunova.in/s/?shop=<slug>` | The live tile visualizer for any shop |
+| `showroom.prasunova.com/` | Marketing landing page |
+| `showroom.prasunova.com/admin/` | Shop owner login & tile management |
+| `showroom.prasunova.com/admin/register.html` | New showroom registration |
+| `showroom.prasunova.com/s/?shop=<slug>` | The live tile visualizer for any shop |
 
 The `/s/` path is intentional — it prevents direct browsing and keeps each shop's link clean and direct-access-only.
 
@@ -36,7 +36,7 @@ The `/s/` path is intentional — it prevents direct browsing and keeps each sho
 ## Repository Structure
 
 ```
-docs/                           ← Deployed to GitHub Pages (showroom.prasunova.in)
+docs/                           ← Deployed to GitHub Pages (showroom.prasunova.com)
   index.html                    ← Marketing landing page (root /)
   styles.css                    ← Shared design system (Outfit, gold/dark theme)
   config.js                     ← API_BASE, TURNSTILE_SITE_KEY
@@ -57,11 +57,11 @@ docs/                           ← Deployed to GitHub Pages (showroom.prasunova
 
 ## Adding a New Showroom (Admin)
 
-1. The shop owner visits `showroom.prasunova.in/admin/register.html`
+1. The shop owner visits `showroom.prasunova.com/admin/register.html`
 2. Enters their shop name, unique slug, and email
 3. Verifies OTP → sets password → account created
 4. Uploads tile photos via the admin dashboard
-5. Shares their link: `showroom.prasunova.in/s/?shop=<slug>`
+5. Shares their link: `showroom.prasunova.com/s/?shop=<slug>`
 
 No manual steps required from the platform side.
 
