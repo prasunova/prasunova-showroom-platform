@@ -17,9 +17,12 @@ document.getElementById('btn-send-otp').addEventListener('click', async () => {
 
   if (!email || !shopName || !slug) { errEl.textContent = 'All fields are required.'; return; }
 
+  const consent = document.getElementById('consent-check').checked;
+  if (!consent) { errEl.textContent = 'Please accept the Privacy Policy and Terms.'; return; }
+
   const res  = await fetch(`${API_BASE}/api/tile/auth/register`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, shopName, slug }),
+    body: JSON.stringify({ email, shopName, slug, consent }),
   });
   const data = await res.json();
   if (data.ok) {
