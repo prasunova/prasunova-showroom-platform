@@ -79,6 +79,23 @@
 
   <h3>Your Tiles <span id="tiles-count" style="font-size:14px;color:var(--muted)"></span></h3>
   <div id="tile-admin-grid" class="tile-admin-grid"></div>
+
+  <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
+  <h3>Account &amp; Privacy</h3>
+  <div class="form-row">
+    <label>Shop name</label>
+    <div style="display:flex;gap:8px">
+      <input id="edit-shop-name" type="text" style="flex:1" />
+      <button id="btn-save-shop-name" class="icon-btn">Save</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <button id="btn-export-data" class="icon-btn">Download my data (JSON)</button>
+  </div>
+  <div class="form-row">
+    <button id="btn-delete-account" class="btn-delete" style="font-size:14px">Delete my account</button>
+    <span style="font-size:12px;color:var(--muted)">Soft-deleted for 30 days, then permanently removed.</span>
+  </div>
 </div>
 
 <div id="toast" class="toast hidden"></div>

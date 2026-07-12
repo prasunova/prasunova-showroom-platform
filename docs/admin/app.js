@@ -26,6 +26,7 @@ async function loadDashboard() {
   document.getElementById('login-section').style.display  = 'none';
   document.getElementById('admin-section').style.display  = 'block';
   document.getElementById('admin-shop-name').textContent  = prof.shopName;
+  document.getElementById('edit-shop-name').value = prof.shopName;
   document.getElementById('admin-slug').textContent       = `showroom.supraa.in/s/?shop=${prof.slug}`;
   document.getElementById('tiles-count').textContent      = `(${(tiles.tiles||[]).length})`;
 
@@ -76,8 +77,15 @@ document.getElementById('btn-login').addEventListener('click', async () => {
     body: JSON.stringify({ email, password }),
   });
   const data = await res.json();
-  if (data.ok) { setToken(data.token); await loadDashboard(); }
-  else errEl.textContent = data.error || 'Login failed.';
+  if (data.ok) {
+    setToken(data.token);
+    if (data.reconsentRequired) {
+      if (confirm('Our Privacy Policy has been updated. Click OK to accept the new version and continue.')) {
+        await fetch(`${API_BASE}/api/tile/auth/reconsent`, { method: 'POST', headers: authHeaders() });
+      }
+    }
+    await loadDashboard();
+  } else errEl.textContent = data.error || 'Login failed.';
 });
 
 document.getElementById('btn-logout').addEventListener('click', () => { clearToken(); location.reload(); });
@@ -110,6 +118,40 @@ document.getElementById('btn-upload-tile').addEventListener('click', async () =>
     } else errEl.textContent = data.error || 'Upload failed.';
   };
   reader.readAsDataURL(fileEl.files[0]);
+});
+
+document.getElementById('btn-save-shop-name').addEventListener('click', async () => {
+  const shopName = document.getElementById('edit-shop-name').value.trim();
+  if (!shopName) { showToast('Shop name cannot be empty.'); return; }
+  const res = await fetch(`${API_BASE}/api/tile/admin/profile`, {
+    method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ shopName }),
+  });
+  const data = await res.json();
+  if (data.ok) { document.getElementById('admin-shop-name').textContent = data.shopName; showToast('Shop name updated.'); }
+  else showToast(data.error || 'Update failed.');
+});
+
+document.getElementById('btn-export-data').addEventListener('click', async () => {
+  const res = await fetch(`${API_BASE}/api/tile/admin/account/export`, { headers: authHeaders() });
+  if (!res.ok) { showToast('Export failed.'); return; }
+  const data = await res.json();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'my-showroom-data.json';
+  a.click();
+  showToast('Data downloaded.');
+});
+
+document.getElementById('btn-delete-account').addEventListener('click', async () => {
+  const password = prompt('This soft-deletes your account (permanent after 30 days). Enter your password to confirm:');
+  if (!password) return;
+  const res = await fetch(`${API_BASE}/api/tile/admin/account/delete`, {
+    method: 'POST', headers: authHeaders(), body: JSON.stringify({ password }),
+  });
+  const data = await res.json();
+  if (data.ok) { alert(data.message); clearToken(); location.reload(); }
+  else showToast(data.error || 'Deletion failed.');
 });
 
 if (getToken()) loadDashboard();
