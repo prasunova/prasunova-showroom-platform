@@ -86,7 +86,13 @@ async function openRoom(room) {
     const scale = maxW / roomPhoto.width;
     canvas.width = roomPhoto.width * scale;
     canvas.height = roomPhoto.height * scale;
-    if (room.hasMasks) {
+    if (room.masks) {
+      // User-uploaded room: signed mask URLs already provided by the poll response.
+      if (room.masks.floor) { maskImages.floor = await loadImage(room.masks.floor); }
+      if (room.masks.wall)  { maskImages.wall  = await loadImage(room.masks.wall);  }
+      document.querySelector('[data-surface="wall"]').disabled = !room.masks.wall;
+    } else if (room.hasMasks) {
+      // Catalog room: fetch masks from the backend by room id.
       const res  = await fetch(`${API_BASE}/api/tile/room-masks/${room.id}`);
       const data = await res.json();
       if (data.ok && data.maskUrls) {
