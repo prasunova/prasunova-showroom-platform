@@ -7,98 +7,116 @@
   <meta name="description" content="Preview granite, marble, and tile textures on real room photos. Powered by AI. Share with your customers instantly." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <header class="app-header">
-  <div class="logo">
-    <a href="/" style="text-decoration:none;display:flex;align-items:center;gap:12px;">
-      <span class="logo-mg" id="logo-badge">PN</span>
-      <div class="logo-text">
-        <span class="logo-name" id="logo-shop-name">Digital Showroom</span>
-        <span class="logo-tagline">Tile Visualizer</span>
-      </div>
-    </a>
-  </div>
+  <a href="/" class="logo">
+    <span class="logo-badge" id="logo-badge">PN</span>
+    <span class="logo-text">
+      <span class="logo-name" id="logo-shop-name">Digital Showroom</span>
+      <span class="logo-tag">Tile Visualizer</span>
+    </span>
+  </a>
   <nav class="header-nav">
-    <button id="btn-catalog" class="nav-btn active">Catalog</button>
-    <button id="btn-upload"  class="nav-btn">Upload Room</button>
+    <button id="btn-catalog" class="nav-tab active">Catalogue</button>
+    <button id="btn-upload"  class="nav-tab">Upload your room</button>
   </nav>
 </header>
 
-<main>
-  <div id="view-gallery" class="view-active">
-    <div id="room-filter" class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="kitchen">Kitchen</button>
-      <button class="filter-btn" data-filter="bathroom">Bathroom</button>
-      <button class="filter-btn" data-filter="living">Living</button>
-      <button class="filter-btn" data-filter="outdoor">Outdoor</button>
-    </div>
-    <div id="room-grid" class="room-grid"></div>
-  </div>
-
-  <div id="view-room" class="view-hidden">
-    <div class="room-view-header">
-      <button id="btn-back" class="icon-btn">← Back</button>
-      <span id="room-name-label"></span>
-      <div id="surface-toggle" class="surface-toggle">
-        <button class="surface-btn active" data-surface="floor">Floor</button>
-        <button class="surface-btn" data-surface="wall">Wall</button>
+<div class="app-body">
+  <main class="app-main">
+    <div id="view-gallery" class="view-active">
+      <div id="room-filter" class="tab-row">
+        <button class="filter-btn active" data-filter="all">All rooms</button>
+        <button class="filter-btn" data-filter="kitchen">Kitchen</button>
+        <button class="filter-btn" data-filter="bathroom">Bathroom</button>
+        <button class="filter-btn" data-filter="living">Living</button>
+        <button class="filter-btn" data-filter="outdoor">Outdoor</button>
       </div>
-      <button id="btn-download" class="icon-btn">Download</button>
-      <button id="btn-share"    class="icon-btn">Share</button>
+      <div id="room-grid" class="room-grid"></div>
     </div>
-    <div class="canvas-wrap">
-      <div id="canvas-loading" class="canvas-loading hidden">Processing…</div>
-      <canvas id="tile-canvas"></canvas>
+
+    <div id="view-room" class="view-hidden">
+      <div class="viewer-toolbar">
+        <button id="btn-back" class="back-btn">← All rooms</button>
+        <span id="room-name-label" class="room-name-label"></span>
+        <div id="surface-toggle" class="surface-toggle">
+          <button class="surface-btn active" data-surface="floor">Floor</button>
+          <button class="surface-btn" data-surface="wall">Wall</button>
+        </div>
+      </div>
+      <div class="canvas-wrapper">
+        <div id="canvas-loading" class="canvas-overlay hidden"><div class="spinner"></div></div>
+        <canvas id="tile-canvas"></canvas>
+      </div>
+      <div class="viewer-actions">
+        <button id="btn-download" class="action-btn secondary">Download photo</button>
+        <button id="btn-share" class="action-btn secondary">Copy link</button>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<aside id="tile-sidebar" class="tile-sidebar">
-  <div id="tile-tabs" class="tile-tabs">
-    <button class="tab-btn active" data-cat="all">All</button>
-    <button class="tab-btn" data-cat="marble">Marble</button>
-    <button class="tab-btn" data-cat="granite">Granite</button>
-    <button class="tab-btn" data-cat="vitrified">Vitrified</button>
-    <button class="tab-btn" data-cat="ceramic">Ceramic</button>
-    <button class="tab-btn" data-cat="anti_skid">Anti-skid</button>
-  </div>
-  <div id="tile-grid" class="tile-grid"></div>
-</aside>
+  <aside id="tile-sidebar" class="tile-sidebar">
+    <div class="sidebar-header">
+      <h2>Tile catalogue</h2>
+      <div id="tile-tabs" class="tab-row" style="padding:0 0 14px;border:none">
+        <button class="tab-btn active" data-cat="all">All</button>
+        <button class="tab-btn" data-cat="marble">Marble</button>
+        <button class="tab-btn" data-cat="granite">Granite</button>
+        <button class="tab-btn" data-cat="vitrified">Vitrified</button>
+        <button class="tab-btn" data-cat="ceramic">Ceramic</button>
+        <button class="tab-btn" data-cat="anti_skid">Anti-skid</button>
+      </div>
+    </div>
+    <div id="tile-grid" class="tile-grid"></div>
+  </aside>
+</div>
 
-<div id="upload-modal" class="modal hidden">
-  <div class="modal-content">
+<div id="upload-modal" class="modal-overlay hidden">
+  <div class="modal">
     <button id="modal-close" class="modal-close">×</button>
+
     <div id="upload-step-1" class="upload-step active">
-      <h3>Upload Your Room</h3>
-      <div id="file-drop-zone" class="drop-zone"><span>Drop a photo here or click to browse</span></div>
+      <h2>Upload your room</h2>
+      <p class="upload-hint">A clear, well-lit photo of the floor — and wall, if you'd like that visualized too — works best.</p>
+      <div id="file-drop-zone" class="file-drop-zone">
+        <span>Drop a photo here or click to browse</span>
+        <small>JPG or PNG, up to 20MB</small>
+      </div>
       <input id="file-input" type="file" accept="image/*" hidden />
-      <select id="category-select" class="select">
-        <option value="living_room">Living Room</option>
-        <option value="kitchen">Kitchen</option>
-        <option value="bathroom">Bathroom</option>
-        <option value="bedroom">Bedroom</option>
-        <option value="entrance">Entrance</option>
-        <option value="balcony">Balcony</option>
-        <option value="toilet">Toilet</option>
-        <option value="shower">Shower</option>
-      </select>
+      <div class="upload-category">
+        <label for="category-select">Room type</label>
+        <select id="category-select" class="select">
+          <option value="living_room">Living Room</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="bedroom">Bedroom</option>
+          <option value="entrance">Entrance</option>
+          <option value="balcony">Balcony</option>
+          <option value="toilet">Toilet</option>
+          <option value="shower">Shower</option>
+        </select>
+      </div>
       <div id="turnstile-widget"></div>
-      <button id="btn-process" class="btn-primary" disabled>Analyze Room</button>
+      <button id="btn-process" class="action-btn primary full-width" disabled>Analyse room</button>
     </div>
+
     <div id="upload-step-2" class="upload-step hidden">
-      <div class="spinner"></div>
-      <p id="processing-msg">Processing…</p>
+      <div class="processing-icon"><div class="pulse-ring"></div><div class="spinner"></div></div>
+      <p id="processing-msg">Uploading photo…</p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
       <p id="elapsed-label"></p>
+      <p class="processing-hint">This AI scan runs once per room — usually a few minutes.</p>
     </div>
+
     <div id="upload-step-3" class="upload-step hidden">
+      <div class="error-icon">!</div>
       <p id="error-title" class="error-title"></p>
       <p id="error-msg"></p>
-      <button id="btn-retry" class="btn-primary">Try Again</button>
+      <button id="btn-retry" class="action-btn primary full-width">Try again</button>
     </div>
   </div>
 </div>
@@ -107,7 +125,7 @@
 
 <script type="module" src="app.js"></script>
 <script type="module" src="upload.js"></script>
-<footer style="text-align:center;padding:24px;font-size:12px;color:var(--muted)">
+<footer class="app-footer">
   <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/data-deletion.html">Data Deletion</a>
 </footer>
 </body>
