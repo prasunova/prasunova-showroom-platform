@@ -23,6 +23,9 @@ const FILTER_MAP = {
 async function init() {
   const widget = document.getElementById('turnstile-widget');
   if (widget && TURNSTILE_SITE_KEY) {
+    // Only opt this element into Cloudflare's auto-render when a real
+    // sitekey exists — an empty sitekey makes Turnstile's own script throw.
+    widget.classList.add('cf-turnstile');
     widget.dataset.sitekey   = TURNSTILE_SITE_KEY;
     widget.dataset.callback  = 'onTurnstileSuccess';
   }
