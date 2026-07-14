@@ -8,9 +8,6 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="../styles.css" />
   <style>
-    .tile-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
-    .tile-admin-card { overflow:hidden; }
-    .tile-admin-card img { width:100%; height:110px; object-fit:cover; display:block; }
     .tile-admin-info { padding:10px; font-size:13px; }
     .tile-admin-info strong { display:block; margin-bottom:4px; }
     .form-row { margin-bottom:12px; display:flex; flex-direction:column; gap:4px; }
@@ -18,10 +15,10 @@
   </style>
 </head>
 <body class="auth-glass admin-glass">
-<div class="back-link-wrap">
-  <a href="/" class="back-link">← Back to PrasuNova Showroom</a>
-</div>
 <div id="login-section">
+  <div class="back-link-wrap">
+    <a href="/" class="back-btn"><span class="back-btn-arrow">←</span><span class="back-btn-full">Back to showroom</span><span class="back-btn-short">Showroom</span></a>
+  </div>
   <div class="login-wrap">
     <h2>Shop Owner Login</h2>
     <div class="form-row"><label>Email</label><input id="login-email" type="email" autocomplete="email" /></div>
@@ -34,23 +31,59 @@
   </div>
 </div>
 
-<div id="admin-section" class="admin-wrap" style="display:none">
-  <div class="admin-topbar">
-    <span class="admin-topbar-brand">PrasuNova Showroom</span>
-    <button id="btn-logout" class="icon-btn">Logout</button>
-  </div>
+<div id="admin-loading" class="admin-loading" style="display:none">
+  <div class="spinner"></div>
+</div>
 
-  <div class="glass-card">
-    <div class="profile-card-head">
-      <div class="profile-avatar">PN</div>
+<div id="admin-section" class="admin-shell" style="display:none">
+  <header class="admin-header-bar">
+    <div class="admin-header-left">
+      <a href="/" class="back-btn"><span class="back-btn-arrow">←</span><span class="back-btn-full">Back to showroom</span><span class="back-btn-short">Showroom</span></a>
       <div>
-        <div class="profile-shop-name" id="admin-shop-name"></div>
-        <span class="profile-plan-badge" id="admin-plan"></span>
+        <div class="admin-header-shop" id="admin-shop-name"></div>
+        <a class="admin-header-link" id="admin-slug" href="#" target="_blank" rel="noopener"></a>
       </div>
     </div>
+    <div class="admin-header-right">
+      <span class="profile-plan-badge" id="admin-plan"></span>
+      <button id="btn-logout" class="icon-btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="admin-workspace">
+    <aside class="admin-sidebar glass-card">
+      <h3>Add Tile</h3>
+      <div class="form-row"><label>Name</label><input id="tile-name" type="text" placeholder="e.g. Carrara White" /></div>
+      <div class="form-row">
+        <label>Category</label>
+        <select id="tile-category">
+          <option value="marble">Marble</option>
+          <option value="granite">Granite</option>
+          <option value="vitrified">Vitrified</option>
+          <option value="ceramic">Ceramic</option>
+          <option value="anti_skid">Anti-skid</option>
+          <option value="wooden">Wooden</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Finish (optional)</label><input id="tile-finish" type="text" placeholder="e.g. Polished" /></div>
+      <div class="form-row"><label>Price per sqft (₹)</label><input id="tile-price" type="number" min="0" step="0.01" value="0" /></div>
+      <div class="form-row"><label>Image</label><input id="tile-image" type="file" accept="image/*" /></div>
+      <p id="upload-error" style="color:#e55;font-size:13px;min-height:18px"></p>
+      <button id="btn-upload-tile" class="btn-primary full-width">Upload Tile</button>
+    </aside>
+
+    <section class="admin-catalogue glass-card">
+      <div class="admin-catalogue-head">
+        <h3>Your Tiles <span id="tiles-count" style="font-size:14px;color:var(--muted)"></span></h3>
+      </div>
+      <div id="tile-admin-grid" class="tile-admin-grid"></div>
+    </section>
+  </div>
+
+  <div class="admin-account glass-card">
+    <h3>Account &amp; Privacy</h3>
     <div class="profile-rows">
       <div class="profile-row"><span>Email</span><strong id="admin-email"></strong></div>
-      <div class="profile-row"><span>Showroom link</span><strong id="admin-slug"></strong></div>
     </div>
     <div class="profile-edit-row">
       <input id="edit-shop-name" type="text" placeholder="Shop name" />
@@ -62,35 +95,15 @@
       <span class="profile-hint">Permanently removed after 30 days.</span>
     </div>
   </div>
-
-  <div class="upload-form glass-card">
-    <h3>Add Tile</h3>
-    <div class="form-row"><label>Name</label><input id="tile-name" type="text" placeholder="e.g. Carrara White" /></div>
-    <div class="form-row">
-      <label>Category</label>
-      <select id="tile-category">
-        <option value="marble">Marble</option>
-        <option value="granite">Granite</option>
-        <option value="vitrified">Vitrified</option>
-        <option value="ceramic">Ceramic</option>
-        <option value="anti_skid">Anti-skid</option>
-        <option value="wooden">Wooden</option>
-      </select>
-    </div>
-    <div class="form-row"><label>Finish (optional)</label><input id="tile-finish" type="text" placeholder="e.g. Polished" /></div>
-    <div class="form-row"><label>Price per sqft (₹)</label><input id="tile-price" type="number" min="0" step="0.01" value="0" /></div>
-    <div class="form-row"><label>Image</label><input id="tile-image" type="file" accept="image/*" /></div>
-    <p id="upload-error" style="color:#e55;font-size:13px;min-height:18px"></p>
-    <button id="btn-upload-tile" class="btn-primary">Upload Tile</button>
-  </div>
-
-  <div class="tiles-section glass-card">
-    <h3>Your Tiles <span id="tiles-count" style="font-size:14px;color:var(--muted)"></span></h3>
-    <div id="tile-admin-grid" class="tile-admin-grid"></div>
-  </div>
 </div>
 
 <div id="toast" class="toast hidden"></div>
+<script>
+  if (localStorage.getItem('showroom_admin_token')) {
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('admin-loading').style.display = 'flex';
+  }
+</script>
 <script type="module" src="app.js"></script>
 <footer style="text-align:center;padding:24px;font-size:12px;color:var(--muted)">
   <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/data-deletion.html">Data Deletion</a>

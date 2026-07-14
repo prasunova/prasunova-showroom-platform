@@ -101,6 +101,7 @@
     .swatch {
       aspect-ratio: 1 / 0.82; border-radius: var(--radius); border: 1px solid var(--border-strong);
       position: relative; overflow: hidden; box-shadow: 0 6px 18px rgba(30,28,25,0.08);
+      background-size: cover; background-position: center;
     }
     .swatch-label {
       position: absolute; left: 0; right: 0; bottom: 0;
@@ -109,31 +110,6 @@
     }
     .swatch-name { font-size: 11.5px; font-weight: 700; color: var(--ink); display: block; }
     .swatch-cat  { font-family: var(--font-mono); font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .swatch--carrara  { background: linear-gradient(115deg, #F5F3EE 0%, #E7E3DA 38%, #F2F0EA 55%, #DEDAD0 72%, #F5F3EE 100%); }
-    .swatch--carrara::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.35; mix-blend-mode: multiply;
-      background: repeating-linear-gradient(100deg, transparent 0 10px, rgba(120,115,105,0.25) 10.5px 11px, transparent 12px 26px);
-    }
-    .swatch--kashmir  { background: radial-gradient(circle at 30% 30%, #EDE9DF 0%, #DFD9C9 45%, #C9C0AA 100%); }
-    .swatch--kashmir::before {
-      content: ''; position: absolute; inset: 0;
-      background-image:
-        radial-gradient(circle, rgba(30,28,25,0.55) 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(168,67,42,0.5) 1px, transparent 1.4px);
-      background-size: 9px 9px, 13px 13px; background-position: 0 0, 4px 6px;
-    }
-    .swatch--tan-brown { background: linear-gradient(135deg, #8A5A3A 0%, #6E4527 45%, #A2734C 75%, #7A4F2E 100%); }
-    .swatch--tan-brown::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.5;
-      background-image: radial-gradient(circle, rgba(0,0,0,0.28) 1px, transparent 1.6px);
-      background-size: 7px 7px;
-    }
-    .swatch--outdoor-grey { background: linear-gradient(160deg, #B7B3AA 0%, #98948A 60%, #86827A 100%); }
-    .swatch--outdoor-grey::before {
-      content: ''; position: absolute; inset: 0; opacity: 0.4;
-      background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(30,28,25,0.18) 6px 7px);
-    }
 
     /* ═══ SECTION SHARED ═══════════════════════════════════════════════════ */
     section { padding: 88px clamp(20px, 4vw, 72px); }
@@ -212,11 +188,14 @@
     .toolkit-scene.active { opacity: 1; pointer-events: auto; }
     .toolkit-room { width: 100%; height: 100%; object-fit: cover; display: block; }
     .toolkit-tile-overlay {
-      position: absolute; left: 6%; right: 6%; bottom: 0; height: 46%;
-      clip-path: polygon(0% 100%, 8% 0%, 92% 0%, 100% 100%);
+      position: absolute; inset: 0;
       background-size: cover; background-position: center; opacity: 0;
+      -webkit-mask-image: url('assets/marketing/room-living-floor-mask.png');
+      mask-image: url('assets/marketing/room-living-floor-mask.png');
+      -webkit-mask-size: cover; mask-size: cover;
+      -webkit-mask-position: center; mask-position: center;
+      -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
       animation: toolkit-fade-in .6s ease forwards .15s;
-      box-shadow: 0 -6px 20px rgba(0,0,0,.25) inset;
     }
     @keyframes toolkit-fade-in { to { opacity: .92; } }
     .toolkit-tile-overlay--a { animation-play-state: paused; animation: toolkit-compare-a 2.6s ease infinite; }
@@ -368,17 +347,17 @@
   </div>
 
   <div class="swatch-board reveal">
-    <div class="swatch swatch--carrara">
-      <div class="swatch-label"><span class="swatch-name">Carrara White</span><span class="swatch-cat">Marble</span></div>
+    <div class="swatch" style="background-image:url('assets/marketing/tile-marble.png')">
+      <div class="swatch-label"><span class="swatch-name">Calacatta Gold</span><span class="swatch-cat">Marble</span></div>
     </div>
-    <div class="swatch swatch--kashmir">
-      <div class="swatch-label"><span class="swatch-name">Kashmir White</span><span class="swatch-cat">Granite</span></div>
+    <div class="swatch" style="background-image:url('assets/marketing/tile-granite.png')">
+      <div class="swatch-label"><span class="swatch-name">Blue Pearl</span><span class="swatch-cat">Granite</span></div>
     </div>
-    <div class="swatch swatch--tan-brown">
-      <div class="swatch-label"><span class="swatch-name">Tan Brown</span><span class="swatch-cat">Granite</span></div>
+    <div class="swatch" style="background-image:url('assets/marketing/tile-wooden.png')">
+      <div class="swatch-label"><span class="swatch-name">Teak Wood Plank</span><span class="swatch-cat">Wooden</span></div>
     </div>
-    <div class="swatch swatch--outdoor-grey">
-      <div class="swatch-label"><span class="swatch-name">Outdoor Grey</span><span class="swatch-cat">Anti-skid</span></div>
+    <div class="swatch" style="background-image:url('assets/marketing/tile-ceramic.png')">
+      <div class="swatch-label"><span class="swatch-name">Emerald Subway</span><span class="swatch-cat">Ceramic</span></div>
     </div>
   </div>
 </section>

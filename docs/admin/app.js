@@ -24,12 +24,16 @@ async function loadDashboard() {
   const tiles = await tilesRes.json();
 
   document.getElementById('login-section').style.display  = 'none';
+  document.getElementById('admin-loading').style.display  = 'none';
   document.getElementById('admin-section').style.display  = 'block';
   document.getElementById('admin-shop-name').textContent  = prof.shopName;
   document.getElementById('edit-shop-name').value = prof.shopName;
   document.getElementById('admin-email').textContent      = prof.email;
   document.getElementById('admin-plan').textContent       = prof.plan === 'free' ? 'Free plan' : 'Pro plan';
-  document.getElementById('admin-slug').textContent       = `showroom.prasunova.com/s/?shop=${prof.slug}`;
+  const slugUrl = `https://showroom.prasunova.com/s/?shop=${prof.slug}`;
+  const slugEl  = document.getElementById('admin-slug');
+  slugEl.textContent = `showroom.prasunova.com/s/?shop=${prof.slug}`;
+  slugEl.href         = slugUrl;
   document.getElementById('tiles-count').textContent      = `(${(tiles.tiles||[]).length})`;
 
   renderTiles(tiles.tiles || []);
