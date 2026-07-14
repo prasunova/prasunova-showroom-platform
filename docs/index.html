@@ -60,7 +60,7 @@
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
-      max-width: 1180px; margin: 0 auto;
+      max-width: 1320px; margin: 0 auto;
       padding: 0 28px; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
     }
@@ -97,7 +97,7 @@
     /* ═══ HERO ════════════════════════════════════════════════════════════ */
     .hero {
       padding: 148px 28px 96px;
-      max-width: 1180px; margin: 0 auto;
+      max-width: 1320px; margin: 0 auto;
       display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center;
     }
     .hero-eyebrow {
@@ -180,7 +180,7 @@
 
     /* ═══ SECTION SHARED ═══════════════════════════════════════════════════ */
     section { padding: 88px 28px; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-inner { max-width: 1280px; margin: 0 auto; }
     .section-tag {
       display: inline-block; font-family: var(--font-mono);
       font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
@@ -192,16 +192,17 @@
     }
     .section-sub { font-size: 16px; color: var(--muted); max-width: 560px; line-height: 1.75; margin-bottom: 48px; }
 
-    /* ═══ SPEC STRIP ══════════════════════════════════════════════════════ */
-    .spec-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface-alt); }
-    .spec-inner {
-      max-width: 1100px; margin: 0 auto; padding: 26px 28px;
-      display: grid; grid-template-columns: repeat(4, 1fr);
+    /* ═══ TRUST STRIP ═════════════════════════════════════════════════════ */
+    .trust-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface-alt); }
+    .trust-inner {
+      max-width: 1280px; margin: 0 auto; padding: 22px 28px;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 44px;
     }
-    .spec-item { padding: 0 20px; border-left: 1px solid var(--border); }
-    .spec-item:first-child { border-left: none; padding-left: 0; }
-    .spec-val { font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--ink); }
-    .spec-label { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .trust-item {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 14px; font-weight: 600; color: var(--ink);
+    }
+    .trust-item::before { content: '✓'; color: var(--accent); font-weight: 700; font-family: var(--font-mono); font-size: 13px; }
 
     /* ═══ HOW IT WORKS ═════════════════════════════════════════════════════ */
     .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
@@ -218,23 +219,6 @@
     .feature-row { display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); }
     .feature-title { font-size: 14.5px; font-weight: 700; color: var(--ink); }
     .feature-desc  { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
-
-    /* ═══ URL DEMO SECTION ════════════════════════════════════════════════ */
-    .url-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; max-width: 700px; }
-    .url-card-title { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .url-row {
-      display: flex; align-items: center; gap: 12px;
-      border-bottom: 1px solid var(--border);
-      padding: 14px 4px; font-size: 13.5px; font-family: var(--font-mono);
-    }
-    .url-row:last-child { border-bottom: none; }
-    .url-text { color: var(--muted); }
-    .url-text .slug { color: var(--accent); font-weight: 600; }
-    .url-badge {
-      margin-left: auto; flex-shrink: 0; font-family: var(--font-body);
-      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 100px;
-      background: var(--kota-tint); color: var(--kota);
-    }
 
     /* ═══ PRICING ══════════════════════════════════════════════════════════ */
     .pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 780px; }
@@ -261,7 +245,7 @@
 
     /* ═══ FOOTER ═══════════════════════════════════════════════════════════ */
     footer { background: var(--bg); border-top: 1px solid var(--border); padding: 30px 28px; }
-    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
     .footer-brand { font-size: 13.5px; color: var(--muted); }
     .footer-brand strong { color: var(--ink); }
     .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -277,13 +261,16 @@
     @media (max-width: 860px) {
       .hero { grid-template-columns: 1fr; padding-top: 128px; }
       .swatch-board { max-width: 420px; }
-      .spec-inner { grid-template-columns: repeat(2, 1fr); row-gap: 20px; }
-      .spec-item:nth-child(3) { border-left: none; }
+      .trust-inner { justify-content: flex-start; gap: 12px 28px; }
       .feature-row { grid-template-columns: 1fr; gap: 6px; }
     }
     @media (max-width: 600px) {
+      .nav-inner, .hero, section, .trust-inner, footer { padding-left: 16px; padding-right: 16px; }
+      .hero { padding-top: 116px; padding-bottom: 64px; }
+      section { padding-top: 56px; padding-bottom: 56px; }
       .nav-actions .btn-ghost { display: none; }
       .footer-inner { flex-direction: column; text-align: center; }
+      .trust-item { font-size: 13px; }
     }
   </style>
 </head>
@@ -310,11 +297,11 @@
 <!-- ═══ HERO ═══════════════════════════════════════════════════════════════════ -->
 <section class="hero">
   <div>
-    <div class="hero-eyebrow">AI-POWERED · FREE TO START</div>
-    <h1 class="hero-h1">Your tile showroom,<br /><em>now online.</em></h1>
+    <div class="hero-eyebrow">FREE TO START · NO APP NEEDED</div>
+    <h1 class="hero-h1">Show your tiles in their room,<br /><em>before they visit yours.</em></h1>
     <p class="hero-sub">
-      Let customers see your granite, marble, and tile products in their own rooms —
-      before they visit your store. No app to install, no code to write. Just a link.
+      Customers choose a tile, preview it on a real floor or wall, then download
+      the result or share the link with family.
     </p>
     <div class="hero-actions">
       <a href="/admin/register.html" class="hero-btn-primary" id="hero-cta-register">Create your showroom →</a>
@@ -339,13 +326,12 @@
   </div>
 </section>
 
-<!-- ═══ SPEC STRIP ═════════════════════════════════════════════════════════════ -->
-<div class="spec-strip">
-  <div class="spec-inner">
-    <div class="spec-item reveal"><div class="spec-val">SAM-3</div><div class="spec-label">AI floor &amp; wall segmentation</div></div>
-    <div class="spec-item reveal"><div class="spec-val">&lt;100ms</div><div class="spec-label">Tile render time</div></div>
-    <div class="spec-item reveal"><div class="spec-val">5</div><div class="spec-label">Material categories</div></div>
-    <div class="spec-item reveal"><div class="spec-val">₹0</div><div class="spec-label">Monthly cost to start</div></div>
+<!-- ═══ TRUST STRIP ═══════════════════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item reveal">Preview tiles in real rooms</div>
+    <div class="trust-item reveal">Upload your own room photo</div>
+    <div class="trust-item reveal">Share results with a link</div>
   </div>
 </div>
 
@@ -369,13 +355,13 @@
       </div>
       <div class="step-card reveal">
         <div class="step-num">03 / Segment</div>
-        <div class="step-title">AI reads the room</div>
-        <div class="step-desc">Our SAM-3 model detects floors and walls in each room photo. Runs once, renders instantly forever after.</div>
+        <div class="step-title">AI detects floors and walls</div>
+        <div class="step-desc">Each room photo is analysed automatically. Runs once, renders instantly forever after.</div>
       </div>
       <div class="step-card reveal">
         <div class="step-num">04 / Share</div>
         <div class="step-title">Send it to customers</div>
-        <div class="step-desc">Customers pick a tile, preview it on their own room photo, and download or share the result.</div>
+        <div class="step-desc">Share your unique showroom link. Customers pick a tile, preview it on their own room photo, and download the result.</div>
       </div>
     </div>
   </div>
@@ -384,14 +370,13 @@
 <!-- ═══ FEATURES ════════════════════════════════════════════════════════════════ -->
 <section class="features">
   <div class="section-inner">
-    <span class="section-tag reveal">Specification</span>
-    <h2 class="section-title reveal">Built for tile &amp; granite retailers.</h2>
-    <p class="section-sub reveal">Not a generic page-builder — every feature maps to how a tile showroom actually sells.</p>
+    <span class="section-tag reveal">Features</span>
+    <h2 class="section-title reveal">Everything a tile showroom actually needs.</h2>
 
     <div class="features-grid">
       <div class="feature-row reveal">
-        <div class="feature-title">Real-time canvas rendering</div>
-        <div class="feature-desc">Tile textures apply directly onto the room photo with HTML5 Canvas — no server round-trip, changes are instant.</div>
+        <div class="feature-title">Instant tile preview</div>
+        <div class="feature-desc">Tile textures apply directly onto the room photo — no waiting, changes appear immediately.</div>
       </div>
       <div class="feature-row reveal">
         <div class="feature-title">Customer-uploaded rooms</div>
@@ -403,43 +388,7 @@
       </div>
       <div class="feature-row reveal">
         <div class="feature-title">Download &amp; share results</div>
-        <div class="feature-desc">Customers download their visualized room as a JPEG or share the link directly — built for WhatsApp sharing.</div>
-      </div>
-      <div class="feature-row reveal">
-        <div class="feature-title">Isolated per showroom</div>
-        <div class="feature-desc">Every shop owner's catalogue is private to their showroom. Customers only see what you've uploaded.</div>
-      </div>
-      <div class="feature-row reveal">
-        <div class="feature-title">Zero infrastructure cost</div>
-        <div class="feature-desc">Hosted on GitHub Pages, Cloudflare R2, and GitHub Actions — free tiers cover most showrooms completely.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ URL DEMO ═════════════════════════════════════════════════════════════════ -->
-<section class="url-demo">
-  <div class="section-inner">
-    <span class="section-tag reveal">Your branded link</span>
-    <h2 class="section-title reveal">One link. Infinite tiles.</h2>
-    <p class="section-sub reveal">
-      Each showroom gets a unique URL — share it on WhatsApp, your Instagram bio, or a visiting card.
-      The <code style="color:var(--accent)">/s/</code> path keeps your showroom direct-access-only.
-    </p>
-
-    <div class="url-card reveal">
-      <div class="url-card-title">Examples of showroom links</div>
-      <div class="url-row">
-        <div class="url-text">showroom.prasunova.com/s/?shop=<span class="slug">mansigranite</span></div>
-        <div class="url-badge">Mansi Granite</div>
-      </div>
-      <div class="url-row">
-        <div class="url-text">showroom.prasunova.com/s/?shop=<span class="slug">rajtilesdelhi</span></div>
-        <div class="url-badge">Raj Tiles</div>
-      </div>
-      <div class="url-row">
-        <div class="url-text">showroom.prasunova.com/s/?shop=<span class="slug">goldengranite</span></div>
-        <div class="url-badge">Golden Granite</div>
+        <div class="feature-desc">Customers download their visualized room as a photo, or copy a link to share it themselves.</div>
       </div>
     </div>
   </div>
@@ -449,8 +398,7 @@
 <section class="pricing">
   <div class="section-inner">
     <span class="section-tag reveal">Pricing</span>
-    <h2 class="section-title reveal">Honest, simple pricing.</h2>
-    <p class="section-sub reveal">Start free. Upgrade when your business grows.</p>
+    <h2 class="section-title reveal">Start free. Upgrade when you need more.</h2>
 
     <div class="pricing-cards">
       <div class="pricing-card reveal">
@@ -476,7 +424,6 @@
           <li>Priority AI segmentation</li>
           <li>Custom room catalogue</li>
           <li>Analytics dashboard</li>
-          <li>WhatsApp share integration</li>
         </ul>
         <a href="/admin/register.html" class="btn-plan btn-plan-solid" id="pricing-pro-cta">Start Pro trial →</a>
       </div>
@@ -486,8 +433,7 @@
 
 <!-- ═══ CTA STRIP ════════════════════════════════════════════════════════════════ -->
 <div class="cta-strip">
-  <h2 class="reveal">Ready to go digital?</h2>
-  <p class="reveal">Your tile showroom can be live in under five minutes.</p>
+  <h2 class="reveal">Your showroom link can be live in minutes.</h2>
   <a href="/admin/register.html" class="hero-btn-primary reveal" id="footer-cta-register">Create your free showroom →</a>
 </div>
 
