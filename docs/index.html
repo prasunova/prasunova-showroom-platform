@@ -6,52 +6,8 @@
   <title>PrasuNova Showroom — AI Tile Visualizer for Your Store</title>
   <meta name="description" content="Give your tile showroom a digital presence. Customers preview real granite and tile textures on real room photos — powered by AI. Free to start." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ═══ TOKENS ═══════════════════════════════════════════════════════════ */
-    :root {
-      --bg:          #F1EFEA;
-      --bg-2:        #E9E6DE;
-      --surface:     #FFFFFF;
-      --surface-alt: #F7F5F1;
-      --ink:         #1E1C19;
-      --muted:       #6B6459;
-      --muted-2:     #948C7F;
-      --border:      rgba(30,28,25,0.12);
-      --border-strong: rgba(30,28,25,0.22);
-      --accent:      #A8432A;
-      --accent-deep: #7C2F1D;
-      --accent-tint: rgba(168,67,42,0.08);
-      --kota:        #3F5B57;
-      --kota-tint:   rgba(63,91,87,0.08);
-      --radius:      6px;
-      --radius-lg:   10px;
-      --transition:  0.2s cubic-bezier(0.4,0,0.2,1);
-      --font-display:'Archivo', sans-serif;
-      --font-body:   'IBM Plex Sans', sans-serif;
-      --font-mono:   'IBM Plex Mono', monospace;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-2); }
-    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-
-    h1, h2, h3 { font-family: var(--font-display); }
-    code { font-family: var(--font-mono); }
-
     /* ═══ NAV ═════════════════════════════════════════════════════════════ */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -60,8 +16,8 @@
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
-      max-width: 1320px; margin: 0 auto;
-      padding: 0 28px; height: 64px;
+      max-width: none; margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 72px); height: 64px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
@@ -96,8 +52,8 @@
 
     /* ═══ HERO ════════════════════════════════════════════════════════════ */
     .hero {
-      padding: 148px 28px 96px;
-      max-width: 1320px; margin: 0 auto;
+      padding: 148px clamp(20px, 4vw, 72px) 96px;
+      max-width: none; margin: 0 auto;
       display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center;
     }
     .hero-eyebrow {
@@ -108,7 +64,7 @@
     .hero-eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 
     .hero-h1 {
-      font-size: clamp(38px, 4.6vw, 60px); font-weight: 800; line-height: 1.05;
+      font-size: clamp(38px, 4.6vw, 64px); font-weight: 800; line-height: 1.05;
       letter-spacing: -1px; margin-bottom: 22px; color: var(--ink);
     }
     .hero-h1 em { font-style: normal; color: var(--accent); }
@@ -140,6 +96,7 @@
     /* ─ swatch board ─ */
     .swatch-board {
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+      max-width: 460px; padding: 14px; border-radius: 22px;
     }
     .swatch {
       aspect-ratio: 1 / 0.82; border-radius: var(--radius); border: 1px solid var(--border-strong);
@@ -179,15 +136,15 @@
     }
 
     /* ═══ SECTION SHARED ═══════════════════════════════════════════════════ */
-    section { padding: 88px 28px; }
-    .section-inner { max-width: 1280px; margin: 0 auto; }
+    section { padding: 88px clamp(20px, 4vw, 72px); }
+    .section-inner { max-width: none; margin: 0 auto; }
     .section-tag {
       display: inline-block; font-family: var(--font-mono);
       font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--accent); margin-bottom: 14px;
     }
     .section-title {
-      font-size: clamp(26px, 3.4vw, 38px); font-weight: 800;
+      font-size: clamp(26px, 3.4vw, 40px); font-weight: 800;
       line-height: 1.18; letter-spacing: -0.5px; color: var(--ink); margin-bottom: 14px;
     }
     .section-sub { font-size: 16px; color: var(--muted); max-width: 560px; line-height: 1.75; margin-bottom: 48px; }
@@ -195,7 +152,7 @@
     /* ═══ TRUST STRIP ═════════════════════════════════════════════════════ */
     .trust-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface-alt); }
     .trust-inner {
-      max-width: 1280px; margin: 0 auto; padding: 22px 28px;
+      max-width: none; margin: 0 auto; padding: 22px clamp(20px, 4vw, 72px);
       display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 44px;
     }
     .trust-item {
@@ -213,7 +170,7 @@
     .step-desc  { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
     .step-desc code { color: var(--accent); font-size: 12.5px; }
 
-    /* ═══ FEATURES (spec list) ════════════════════════════════════════════ */
+    /* ═══ FEATURES ════════════════════════════════════════════════════════ */
     .features { background: var(--surface-alt); }
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0; border-top: 1px solid var(--border); }
     .feature-row { display: grid; grid-template-columns: 200px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--border); }
@@ -238,14 +195,13 @@
     .btn-plan-solid:hover { background: var(--accent); border-color: var(--accent); }
 
     /* ═══ CTA STRIP ════════════════════════════════════════════════════════ */
-    .cta-strip { background: var(--ink); text-align: center; padding: 76px 28px; }
-    .cta-strip h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; margin-bottom: 12px; color: var(--bg); letter-spacing: -0.5px; }
-    .cta-strip p  { font-size: 16px; color: rgba(241,239,234,0.65); margin-bottom: 32px; }
+    .cta-strip { background: var(--ink); text-align: center; padding: 76px clamp(20px, 4vw, 72px); }
+    .cta-strip h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; margin-bottom: 24px; color: var(--bg); letter-spacing: -0.5px; }
     .cta-strip .hero-btn-primary { background: var(--accent); border-color: var(--accent); }
 
     /* ═══ FOOTER ═══════════════════════════════════════════════════════════ */
-    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 30px 28px; }
-    .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 30px clamp(20px, 4vw, 72px); }
+    .footer-inner { max-width: none; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
     .footer-brand { font-size: 13.5px; color: var(--muted); }
     .footer-brand strong { color: var(--ink); }
     .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -265,7 +221,6 @@
       .feature-row { grid-template-columns: 1fr; gap: 6px; }
     }
     @media (max-width: 600px) {
-      .nav-inner, .hero, section, .trust-inner, footer { padding-left: 16px; padding-right: 16px; }
       .hero { padding-top: 116px; padding-bottom: 64px; }
       section { padding-top: 56px; padding-bottom: 56px; }
       .nav-actions .btn-ghost { display: none; }
@@ -274,7 +229,7 @@
     }
   </style>
 </head>
-<body>
+<body class="site-glass">
 
 <!-- ═══ NAV ═══════════════════════════════════════════════════════════════════ -->
 <nav class="nav">

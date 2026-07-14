@@ -6,35 +6,20 @@
   <title>Admin — PrasuNova Showroom</title>
   <meta name="description" content="Manage your tile showroom catalog. Upload tiles, view your showroom link, and manage your shop." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
   <style>
-    .admin-wrap { max-width:900px; margin:40px auto; padding:0 20px; }
-    .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-    .tile-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
-    .tile-admin-card { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-    .tile-admin-card img { width:100%; height:120px; object-fit:cover; }
+    .tile-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
+    .tile-admin-card { overflow:hidden; }
+    .tile-admin-card img { width:100%; height:110px; object-fit:cover; display:block; }
     .tile-admin-info { padding:10px; font-size:13px; }
     .tile-admin-info strong { display:block; margin-bottom:4px; }
-    .btn-delete { background:none; border:none; color:#e55; cursor:pointer; font-size:12px; }
-    .upload-form { border:1px solid var(--border); border-radius:8px; padding:20px; margin-bottom:32px; }
-    .upload-form h3 { margin-top:0; }
     .form-row { margin-bottom:12px; display:flex; flex-direction:column; gap:4px; }
-    .form-row label { font-size:13px; color:var(--muted); }
-    .form-row input, .form-row select { padding:8px; border:1px solid var(--border); border-radius:4px; font-size:14px; }
-    .login-wrap { max-width:360px; margin:80px auto; padding:32px; border:1px solid var(--border); border-radius:12px; }
-    .login-wrap h2 { margin-top:0; text-align:center; }
-    .login-wrap .form-row input { width:100%; box-sizing:border-box; }
-    .login-links { font-size:13px; text-align:center; margin-top:12px; }
-    .login-links a { color:var(--brand-primary); text-decoration:none; }
-    #login-error { color:#e55; font-size:13px; text-align:center; min-height:18px; }
+    .form-row input, .form-row select { width:100%; box-sizing:border-box; }
   </style>
 </head>
-<body>
-<div style="text-align:center;padding:20px 0 0;">
-  <a href="/" style="font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.5px;">← Back to PrasuNova Showroom</a>
+<body class="auth-glass admin-glass">
+<div class="back-link-wrap">
+  <a href="/" class="back-link">← Back to PrasuNova Showroom</a>
 </div>
 <div id="login-section">
   <div class="login-wrap">
@@ -42,7 +27,7 @@
     <div class="form-row"><label>Email</label><input id="login-email" type="email" autocomplete="email" /></div>
     <div class="form-row"><label>Password</label><input id="login-password" type="password" autocomplete="current-password" /></div>
     <p id="login-error"></p>
-    <button id="btn-login" class="btn-primary" style="width:100%">Login</button>
+    <button id="btn-login" class="btn-primary full-width">Login</button>
     <div class="login-links">
       <a href="forgot-password.html">Forgot password?</a> · <a href="register.html">Register</a>
     </div>
@@ -50,15 +35,35 @@
 </div>
 
 <div id="admin-section" class="admin-wrap" style="display:none">
-  <div class="admin-header">
-    <div>
-      <strong id="admin-shop-name"></strong>
-      <span id="admin-slug" style="font-size:13px;color:var(--muted);margin-left:8px"></span>
-    </div>
+  <div class="admin-topbar">
+    <span class="admin-topbar-brand">PrasuNova Showroom</span>
     <button id="btn-logout" class="icon-btn">Logout</button>
   </div>
 
-  <div class="upload-form">
+  <div class="glass-card">
+    <div class="profile-card-head">
+      <div class="profile-avatar">PN</div>
+      <div>
+        <div class="profile-shop-name" id="admin-shop-name"></div>
+        <span class="profile-plan-badge" id="admin-plan"></span>
+      </div>
+    </div>
+    <div class="profile-rows">
+      <div class="profile-row"><span>Email</span><strong id="admin-email"></strong></div>
+      <div class="profile-row"><span>Showroom link</span><strong id="admin-slug"></strong></div>
+    </div>
+    <div class="profile-edit-row">
+      <input id="edit-shop-name" type="text" placeholder="Shop name" />
+      <button id="btn-save-shop-name" class="icon-btn">Save</button>
+    </div>
+    <div class="profile-actions">
+      <button id="btn-export-data" class="icon-btn">Download my data</button>
+      <button id="btn-delete-account" class="btn-delete">Delete my account</button>
+      <span class="profile-hint">Permanently removed after 30 days.</span>
+    </div>
+  </div>
+
+  <div class="upload-form glass-card">
     <h3>Add Tile</h3>
     <div class="form-row"><label>Name</label><input id="tile-name" type="text" placeholder="e.g. Carrara White" /></div>
     <div class="form-row">
@@ -79,24 +84,9 @@
     <button id="btn-upload-tile" class="btn-primary">Upload Tile</button>
   </div>
 
-  <h3>Your Tiles <span id="tiles-count" style="font-size:14px;color:var(--muted)"></span></h3>
-  <div id="tile-admin-grid" class="tile-admin-grid"></div>
-
-  <hr style="margin:32px 0;border:none;border-top:1px solid var(--border)" />
-  <h3>Account &amp; Privacy</h3>
-  <div class="form-row">
-    <label>Shop name</label>
-    <div style="display:flex;gap:8px">
-      <input id="edit-shop-name" type="text" style="flex:1" />
-      <button id="btn-save-shop-name" class="icon-btn">Save</button>
-    </div>
-  </div>
-  <div class="form-row">
-    <button id="btn-export-data" class="icon-btn">Download my data</button>
-  </div>
-  <div class="form-row">
-    <button id="btn-delete-account" class="btn-delete" style="font-size:14px">Delete my account</button>
-    <span style="font-size:12px;color:var(--muted)">Permanently removed after 30 days.</span>
+  <div class="tiles-section glass-card">
+    <h3>Your Tiles <span id="tiles-count" style="font-size:14px;color:var(--muted)"></span></h3>
+    <div id="tile-admin-grid" class="tile-admin-grid"></div>
   </div>
 </div>
 

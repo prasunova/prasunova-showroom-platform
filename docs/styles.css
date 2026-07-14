@@ -584,3 +584,111 @@ h1, h2, h3 { font-family: var(--font-display); }
 @media (prefers-reduced-motion: reduce) {
   .showroom-app *, .showroom-app *::before, .showroom-app *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* ======================================================================
+   SITE-WIDE GLASS THEME
+   Same visual language as .showroom-app (/s/), extended to the marketing
+   homepage and the auth / admin pages. Structural behaviour stays in JS;
+   this only ever adds classes and restyles existing selectors.
+   ====================================================================== */
+.site-glass, .auth-glass {
+  --glass: rgba(255, 255, 255, 0.66);
+  --glass-strong: rgba(255, 255, 255, 0.84);
+  --glass-border: rgba(255, 255, 255, 0.72);
+  --ambient-shadow: 0 18px 50px rgba(50, 37, 25, 0.12), 0 2px 8px rgba(50, 37, 25, 0.05);
+  --soft-ease: cubic-bezier(.22, 1, .36, 1);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(214, 154, 118, 0.32), transparent 31rem),
+    radial-gradient(circle at 96% 22%, rgba(117, 158, 148, 0.23), transparent 28rem),
+    linear-gradient(135deg, #eee8dd 0%, #f7f4ee 48%, #e9e7e0 100%);
+  min-height: 100vh;
+}
+.site-glass::before, .auth-glass::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .22;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+}
+
+/* ─── AUTH CARD (login / register / forgot-password) ─── */
+.auth-glass { display: flex; flex-direction: column; }
+.auth-glass .back-link-wrap { text-align: center; padding: 22px 0 0; }
+.auth-glass .back-link {
+  font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: 0.3px;
+  padding: 6px 14px; border-radius: 100px; transition: var(--transition);
+}
+.auth-glass .back-link:hover { color: var(--ink); background: rgba(255,255,255,.5); }
+.auth-glass .auth-wrap, .auth-glass .login-wrap {
+  background: var(--glass) !important; border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--ambient-shadow) !important; backdrop-filter: blur(24px) saturate(150%);
+  border-radius: 22px !important; animation: showroom-modal-in .45s var(--soft-ease) both;
+}
+.auth-glass .form-row input, .auth-glass .form-row select {
+  background: rgba(255,255,255,.55); border-color: rgba(94,74,55,.16);
+}
+.auth-glass .form-row input:focus { background: rgba(255,255,255,.85); }
+.auth-glass .btn-primary { border-radius: 12px; box-shadow: 0 8px 18px rgba(168,67,42,.22); }
+.auth-glass footer { color: rgba(65,55,46,.72); background: transparent; }
+
+/* ─── ADMIN DASHBOARD ─── */
+.admin-glass .admin-wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+.admin-glass .admin-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.admin-glass .admin-topbar-brand { font-family: var(--font-display); font-weight: 800; font-size: 15px; color: var(--ink); }
+.admin-glass .glass-card {
+  background: var(--glass); border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--ambient-shadow); backdrop-filter: blur(22px) saturate(145%);
+  border-radius: 20px; padding: 24px; margin-bottom: 22px;
+}
+.admin-glass .profile-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.admin-glass .profile-avatar {
+  width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+  background: linear-gradient(145deg, #34312d, #171614);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--bg);
+  box-shadow: inset 0 1px rgba(255,255,255,.18), 0 8px 18px rgba(30,28,25,.2);
+}
+.admin-glass .profile-shop-name { font-family: var(--font-display); font-weight: 800; font-size: 19px; color: var(--ink); }
+.admin-glass .profile-plan-badge {
+  display: inline-block; margin-top: 3px; font-family: var(--font-mono); font-size: 10.5px;
+  font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-tint); padding: 2px 9px; border-radius: 100px;
+}
+.admin-glass .profile-rows { border-top: 1px solid rgba(94,74,55,.14); padding-top: 14px; margin-bottom: 18px; }
+.admin-glass .profile-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 7px 0; font-size: 13.5px;
+}
+.admin-glass .profile-row span { color: var(--muted); }
+.admin-glass .profile-row strong { color: var(--ink); font-weight: 600; font-family: var(--font-mono); font-size: 12.5px; text-align: right; word-break: break-all; }
+.admin-glass .profile-edit-row { display: flex; gap: 8px; margin-bottom: 18px; }
+.admin-glass .profile-edit-row input { flex: 1; }
+.admin-glass .profile-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(94,74,55,.14); }
+.admin-glass .profile-hint { font-size: 12px; color: var(--muted); }
+.admin-glass .upload-form, .admin-glass .tiles-section { background: transparent; }
+.admin-glass .upload-form.glass-card h3, .admin-glass .tiles-section h3 { margin-top: 0 !important; }
+.admin-glass .tile-admin-card { background: rgba(255,255,255,.5) !important; border-color: var(--glass-border) !important; border-radius: 14px !important; }
+.admin-glass .form-row input, .admin-glass .form-row select { background: rgba(255,255,255,.55); border-color: rgba(94,74,55,.16); }
+.admin-glass .login-wrap { max-width: 380px; margin: 100px auto; padding: 34px; }
+
+/* ─── HOMEPAGE SHELL ─── */
+.site-glass .nav {
+  background: rgba(248, 246, 241, 0.66) !important; backdrop-filter: blur(22px) saturate(150%) !important;
+  border-bottom-color: rgba(255,255,255,.68) !important; box-shadow: 0 8px 24px rgba(44,35,26,.05);
+}
+.site-glass .nav-inner, .site-glass .hero, .site-glass .section-inner, .site-glass .footer-inner {
+  max-width: none !important;
+}
+.site-glass .swatch-board, .site-glass .step-card, .site-glass .pricing-card, .site-glass .trust-strip {
+  background: var(--glass); border-color: var(--glass-border) !important;
+  backdrop-filter: blur(20px) saturate(140%); box-shadow: var(--ambient-shadow);
+}
+.site-glass .steps-grid, .site-glass .features-grid { background: rgba(94,74,55,.12) !important; }
+.site-glass .step-card { border-radius: 18px; }
+.site-glass .step-card:hover { background: var(--glass-strong) !important; transform: translateY(-3px); transition: var(--transition); }
+.site-glass .pricing-card { border-radius: 18px; background: rgba(255,255,255,.44); }
+.site-glass .pricing-card.featured { background: var(--glass-strong); border-color: rgba(41,38,35,.5) !important; }
+.site-glass .trust-strip { border-radius: 18px; margin: 0 clamp(16px, 3vw, 44px); border: 1px solid var(--glass-border); }
+.site-glass .cta-strip { background: linear-gradient(135deg, #292623, #171614); border-radius: 28px; margin: 0 clamp(16px, 3vw, 44px) 40px; }
+.site-glass footer { background: transparent; }
+

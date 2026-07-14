@@ -6,25 +6,16 @@
   <title>Create Your Showroom — PrasuNova</title>
   <meta name="description" content="Register your tile showroom on PrasuNova. Get your branded link in 60 seconds." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
   <style>
-    .auth-wrap { max-width:380px; margin:80px auto; padding:32px; border:1px solid var(--border); border-radius:12px; }
-    .auth-wrap h2 { margin-top:0; text-align:center; }
     .form-row { margin-bottom:12px; display:flex; flex-direction:column; gap:4px; }
-    .form-row label { font-size:13px; color:var(--muted); }
-    .form-row input { padding:8px; border:1px solid var(--border); border-radius:4px; font-size:14px; width:100%; box-sizing:border-box; }
-    .slug-preview { font-size:12px; color:var(--muted); margin-top:4px; }
-    #reg-error { color:#e55; font-size:13px; min-height:18px; text-align:center; }
-    .auth-links { font-size:13px; text-align:center; margin-top:12px; }
-    .auth-links a { color:var(--brand-primary); text-decoration:none; }
+    .form-row input { width:100%; box-sizing:border-box; }
+    .slug-preview { font-size:12px; margin-top:4px; }
   </style>
 </head>
-<body>
-<div style="text-align:center;padding:20px 0 0;">
-  <a href="/" style="font-size:13px;color:var(--muted);text-decoration:none;letter-spacing:0.5px;">← Back to PrasuNova Showroom</a>
+<body class="auth-glass">
+<div class="back-link-wrap">
+  <a href="/" class="back-link">← Back to PrasuNova Showroom</a>
 </div>
 <div class="auth-wrap" id="step1">
   <h2>Create Your Showroom</h2>
@@ -42,7 +33,7 @@
     account data as described.</span>
   </label>
   <p id="reg-error"></p>
-  <button id="btn-send-otp" class="btn-primary" style="width:100%">Send Verification Code</button>
+  <button id="btn-send-otp" class="btn-primary full-width">Send Verification Code</button>
   <div class="auth-links"><a href="index.html">Already have an account? Login</a></div>
 </div>
 
@@ -51,8 +42,8 @@
   <p style="font-size:14px;text-align:center">Enter the 6-digit code sent to your email and set a password.</p>
   <div class="form-row"><label>Verification Code</label><input id="otp-input" type="text" maxlength="6" placeholder="123456" /></div>
   <div class="form-row"><label>Password (min 8 chars)</label><input id="reg-password" type="password" /></div>
-  <p id="otp-error" style="color:#e55;font-size:13px;min-height:18px;text-align:center"></p>
-  <button id="btn-verify" class="btn-primary" style="width:100%">Create Account</button>
+  <p id="otp-error" style="font-size:13px;min-height:18px;text-align:center"></p>
+  <button id="btn-verify" class="btn-primary full-width">Create Account</button>
 </div>
 
 <script type="module" src="register.js"></script>
