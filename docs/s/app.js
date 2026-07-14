@@ -28,7 +28,7 @@ function renderTurnstile() {
   // this widget isn't in the DOM with the class yet at that instant, it's
   // never picked up. Polling for window.turnstile sidesteps that entirely.
   if (!window.turnstile) { setTimeout(renderTurnstile, 100); return; }
-  window.turnstile.render(widget, {
+  window.SS_turnstileWidgetId = window.turnstile.render(widget, {
     sitekey:  TURNSTILE_SITE_KEY,
     callback: (token) => { if (window.onTurnstileSuccess) window.onTurnstileSuccess(token); },
   });
@@ -271,8 +271,10 @@ function bindEvents() {
     document.getElementById('view-room').className    = 'view-hidden';
     document.getElementById('view-gallery').className = 'view-active';
   });
-  document.getElementById('btn-upload').addEventListener('click', () =>
-    document.getElementById('upload-modal').classList.remove('hidden'));
+  document.getElementById('btn-upload').addEventListener('click', () => {
+    if (window.SS_resetUpload) window.SS_resetUpload();
+    document.getElementById('upload-modal').classList.remove('hidden');
+  });
   document.getElementById('btn-download').addEventListener('click', downloadResult);
   document.getElementById('btn-share').addEventListener('click', () => {
     navigator.clipboard.writeText(location.href).then(() => showToast('Link copied!'));

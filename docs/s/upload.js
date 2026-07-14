@@ -157,7 +157,13 @@ function resetUpload() {
   if (pollTimer) clearInterval(pollTimer);
   stopElapsedTimer(); clearTimeout(timeoutTimer);
   goToStep(1);
+  // Turnstile tokens are single-use and don't auto-refresh (Cloudflare docs) —
+  // without this, the second upload in a session would fail Turnstile forever.
+  if (window.turnstile && window.SS_turnstileWidgetId != null) {
+    window.turnstile.reset(window.SS_turnstileWidgetId);
+  }
 }
+window.SS_resetUpload = resetUpload;
 function fileToBase64(file) {
   return new Promise((res, rej) => {
     const r = new FileReader();
