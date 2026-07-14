@@ -20,15 +20,22 @@ const FILTER_MAP = {
   outdoor:  ['balcony','terrace','entrance','driveway'],
 };
 
-async function init() {
+function renderTurnstile() {
   const widget = document.getElementById('turnstile-widget');
-  if (widget && TURNSTILE_SITE_KEY) {
-    // Only opt this element into Cloudflare's auto-render when a real
-    // sitekey exists — an empty sitekey makes Turnstile's own script throw.
-    widget.classList.add('cf-turnstile');
-    widget.dataset.sitekey   = TURNSTILE_SITE_KEY;
-    widget.dataset.callback  = 'onTurnstileSuccess';
-  }
+  if (!widget || !TURNSTILE_SITE_KEY) return;
+  // Explicit rendering: Turnstile's implicit (class-based) auto-render only
+  // scans the DOM once when its own script loads, which races app.js — if
+  // this widget isn't in the DOM with the class yet at that instant, it's
+  // never picked up. Polling for window.turnstile sidesteps that entirely.
+  if (!window.turnstile) { setTimeout(renderTurnstile, 100); return; }
+  window.turnstile.render(widget, {
+    sitekey:  TURNSTILE_SITE_KEY,
+    callback: (token) => { if (window.onTurnstileSuccess) window.onTurnstileSuccess(token); },
+  });
+}
+
+async function init() {
+  renderTurnstile();
 
   try {
     const res     = await fetch(`${API_BASE}/api/tile/catalog/${slug}`);
