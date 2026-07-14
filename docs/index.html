@@ -195,6 +195,10 @@
       -webkit-mask-size: cover; mask-size: cover;
       -webkit-mask-position: center; mask-position: center;
       -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+      /* The mask PNG is 8-bit grayscale with no alpha channel. CSS mask-image
+         defaults to reading the ALPHA channel (which is fully opaque here,
+         i.e. "show everything") unless told to read luminance instead. */
+      mask-mode: luminance;
       animation: toolkit-fade-in .6s ease forwards .15s;
     }
     @keyframes toolkit-fade-in { to { opacity: .92; } }
