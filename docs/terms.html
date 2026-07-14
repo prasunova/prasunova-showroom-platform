@@ -6,45 +6,71 @@
   <title>Terms of Service — PrasuNova Showroom</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
-  <style>.legal{max-width:800px;margin:40px auto;padding:0 20px;line-height:1.7}.legal h2{margin-top:28px}</style>
 </head>
-<body>
-<div class="legal">
-  <p><a href="/">← Back</a></p>
-  <h1>Terms of Service</h1>
-  <p><strong>Effective date:</strong> {{EFFECTIVE_DATE}} · <strong>Version:</strong> 1.0</p>
-  <p>These Terms govern your use of PrasuNova Showroom, operated by {{LEGAL_ENTITY_NAME}}.</p>
+<body class="site-glass">
+<header class="legal-header">
+  <a href="/" class="back-btn"><span class="back-btn-arrow">←</span><span class="back-btn-full">Back to showroom</span><span class="back-btn-short">Showroom</span></a>
+  <span class="legal-header-brand">PrasuNova Showroom</span>
+</header>
 
-  <h2>1. The service</h2>
-  <p>PrasuNova Showroom lets tile/granite retailers publish a branded catalogue and lets visitors preview
-  tile textures on room photos.</p>
+<div class="legal-shell">
+  <nav class="legal-toc">
+    <span class="legal-toc-label">On this page</span>
+    <a href="#the-service">The service</a>
+    <a href="#your-account">Your account</a>
+    <a href="#acceptable-use">Acceptable use</a>
+    <a href="#content-ownership">Content &amp; ownership</a>
+    <a href="#availability">Availability &amp; liability</a>
+    <a href="#termination">Termination</a>
+    <a href="#governing-law">Governing law</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-  <h2>2. Your account</h2>
-  <p>You are responsible for the confidentiality of your credentials and for the content you upload. You
-  confirm you have the rights to any images you upload.</p>
+  <div class="legal-doc">
+    <h1>Terms of Service</h1>
+    <p class="legal-meta">Last updated: {{EFFECTIVE_DATE}} · Version 1.0</p>
 
-  <h2>3. Acceptable use</h2>
-  <p>Do not upload unlawful, infringing, or harmful content, or attempt to disrupt the service.</p>
+    <p>These Terms govern your use of PrasuNova Showroom, operated by {{LEGAL_ENTITY_NAME}}.</p>
 
-  <h2>4. Content &amp; ownership</h2>
-  <p>You retain ownership of your uploaded content and grant us a limited licence to host and display it
-  to operate your showroom.</p>
+    <h2 id="the-service">1. The service</h2>
+    <p>PrasuNova Showroom lets tile/granite retailers publish a branded catalogue and lets visitors preview
+    tile textures on room photos.</p>
 
-  <h2>5. Availability &amp; liability</h2>
-  <p>The service is provided "as is" on a best-effort basis. To the extent permitted by law, we are not
-  liable for indirect or consequential losses.</p>
+    <h2 id="your-account">2. Your account</h2>
+    <p>You are responsible for the confidentiality of your credentials and for the content you upload. You
+    confirm you have the rights to any images you upload.</p>
 
-  <h2>6. Termination</h2>
-  <p>You may delete your account anytime. We may suspend accounts that violate these Terms.</p>
+    <h2 id="acceptable-use">3. Acceptable use</h2>
+    <p>Do not upload unlawful, infringing, or harmful content, or attempt to disrupt the service.</p>
 
-  <h2>7. Governing law</h2>
-  <p>These Terms are governed by the laws of India, and disputes are subject to the courts of
-  {{JURISDICTION_CITY}}, India.</p>
+    <h2 id="content-ownership">4. Content &amp; ownership</h2>
+    <p>You retain ownership of your uploaded content and grant us a limited licence to host and display it
+    to operate your showroom.</p>
 
-  <h2>8. Contact</h2>
-  <p><a href="mailto:{{GRIEVANCE_EMAIL}}">{{GRIEVANCE_EMAIL}}</a></p>
+    <h2 id="availability">5. Availability &amp; liability</h2>
+    <p>The service is provided "as is" on a best-effort basis. To the extent permitted by law, we are not
+    liable for indirect or consequential losses.</p>
 
-  <p style="margin-top:32px"><a href="privacy.html">Privacy Policy</a> · <a href="data-deletion.html">Data Deletion</a></p>
+    <h2 id="termination">6. Termination</h2>
+    <p>You may delete your account anytime. We may suspend accounts that violate these Terms.</p>
+
+    <h2 id="governing-law">7. Governing law</h2>
+    <p>These Terms are governed by the laws of India, and disputes are subject to the courts of
+    {{JURISDICTION_CITY}}, India.</p>
+
+    <h2 id="contact">8. Contact</h2>
+    <p><a href="mailto:{{GRIEVANCE_EMAIL}}">{{GRIEVANCE_EMAIL}}</a></p>
+
+    <div class="legal-cta">
+      <h3>Need help with your account?</h3>
+      <p>Reach out and we'll get back to you as soon as we can.</p>
+      <a href="mailto:{{GRIEVANCE_EMAIL}}" class="btn-primary">Email {{GRIEVANCE_EMAIL}}</a>
+    </div>
+  </div>
 </div>
+
+<footer class="legal-footer">
+  <a href="privacy.html">Privacy Policy</a> · <a href="data-deletion.html">Data Deletion</a>
+</footer>
 </body>
 </html>

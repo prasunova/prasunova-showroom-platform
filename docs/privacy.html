@@ -6,66 +6,93 @@
   <title>Privacy Policy — PrasuNova Showroom</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
-  <style>.legal{max-width:800px;margin:40px auto;padding:0 20px;line-height:1.7}.legal h2{margin-top:28px}</style>
 </head>
-<body>
-<div class="legal">
-  <p><a href="/">← Back</a></p>
-  <h1>Privacy Policy</h1>
-  <p><strong>Effective date:</strong> {{EFFECTIVE_DATE}} · <strong>Version:</strong> 1.0</p>
-  <p>This Privacy Policy explains how <strong>{{LEGAL_ENTITY_NAME}}</strong> ("we", "us"), operating
-  PrasuNova Showroom, collects and processes personal data, in accordance with India's Digital Personal
-  Data Protection Act, 2023 (DPDP Act).</p>
+<body class="site-glass">
+<header class="legal-header">
+  <a href="/" class="back-btn"><span class="back-btn-arrow">←</span><span class="back-btn-full">Back to showroom</span><span class="back-btn-short">Showroom</span></a>
+  <span class="legal-header-brand">PrasuNova Showroom</span>
+</header>
 
-  <h2>1. Who we are (Data Fiduciary)</h2>
-  <p>{{LEGAL_ENTITY_NAME}}, {{REGISTERED_ADDRESS}}. We are the Data Fiduciary for the personal data
-  described below.</p>
+<div class="legal-shell">
+  <nav class="legal-toc">
+    <span class="legal-toc-label">On this page</span>
+    <a href="#who-we-are">Who we are</a>
+    <a href="#what-we-collect">What we collect</a>
+    <a href="#purpose">Purpose &amp; legal basis</a>
+    <a href="#your-rights">Your rights</a>
+    <a href="#retention">Retention</a>
+    <a href="#security">Security</a>
+    <a href="#sharing">Sharing &amp; processors</a>
+    <a href="#grievance">Grievance Officer</a>
+    <a href="#changes">Changes</a>
+  </nav>
 
-  <h2>2. What we collect</h2>
-  <ul>
-    <li><strong>Shop owner account data:</strong> email address, hashed password, shop name, and shop URL slug.</li>
-    <li><strong>Content you upload:</strong> tile images and their metadata.</li>
-    <li><strong>Visitor room photos:</strong> images uploaded by end visitors for tile preview are processed
-    to generate masks and are automatically deleted from storage after 30 days. No visitor account or
-    identifying information is stored.</li>
-  </ul>
+  <div class="legal-doc">
+    <h1>Privacy Policy</h1>
+    <p class="legal-meta">Last updated: {{EFFECTIVE_DATE}} · Version 1.0</p>
 
-  <h2>3. Purpose &amp; legal basis</h2>
-  <p>We process shop-owner personal data on the basis of your <strong>consent</strong>, given at
-  registration, solely to create and operate your account and your public showroom. We practise data
-  minimisation and do not use your data for unrelated purposes.</p>
+    <p>This Privacy Policy explains how <strong>{{LEGAL_ENTITY_NAME}}</strong> ("we", "us"), operating
+    PrasuNova Showroom, collects and processes personal data, in accordance with India's Digital Personal
+    Data Protection Act, 2023 (DPDP Act).</p>
 
-  <h2>4. Your rights (Data Principal)</h2>
-  <ul>
-    <li><strong>Access &amp; portability:</strong> download all your data as JSON from your dashboard.</li>
-    <li><strong>Correction:</strong> edit your shop name in the dashboard; for other corrections contact the Grievance Officer.</li>
-    <li><strong>Erasure:</strong> delete your account from the dashboard. It is soft-deleted immediately and
-    permanently erased after a 30-day grace period.</li>
-    <li><strong>Withdraw consent:</strong> withdrawing consent deletes your account (consent is our basis for processing).</li>
-  </ul>
+    <h2 id="who-we-are">1. Who we are (Data Fiduciary)</h2>
+    <p>{{LEGAL_ENTITY_NAME}}, {{REGISTERED_ADDRESS}}. We are the Data Fiduciary for the personal data
+    described below.</p>
 
-  <h2>5. Retention</h2>
-  <p>Account data is retained until you delete your account (then purged after 30 days). Visitor room
-  photos and masks are purged after 30 days.</p>
+    <h2 id="what-we-collect">2. What we collect</h2>
+    <ul>
+      <li><strong>Shop owner account data:</strong> email address, hashed password, shop name, and shop URL slug.</li>
+      <li><strong>Content you upload:</strong> tile images and their metadata.</li>
+      <li><strong>Visitor room photos:</strong> images uploaded by end visitors for tile preview are processed
+      to generate masks and are automatically deleted from storage after 30 days. No visitor account or
+      identifying information is stored.</li>
+    </ul>
 
-  <h2>6. Security</h2>
-  <p>Passwords are hashed (bcrypt). Data is transmitted over HTTPS. Database credentials are held only on
-  our backend server and never exposed to browsers or public code.</p>
+    <h2 id="purpose">3. Purpose &amp; legal basis</h2>
+    <p>We process shop-owner personal data on the basis of your <strong>consent</strong>, given at
+    registration, solely to create and operate your account and your public showroom. We practise data
+    minimisation and do not use your data for unrelated purposes.</p>
 
-  <h2>7. Sharing &amp; processors</h2>
-  <p>We use infrastructure processors (hosting, email delivery, object storage) solely to run the service.
-  We do not sell personal data.</p>
+    <h2 id="your-rights">4. Your rights (Data Principal)</h2>
+    <ul>
+      <li><strong>Access &amp; portability:</strong> download all your data as JSON from your dashboard.</li>
+      <li><strong>Correction:</strong> edit your shop name in the dashboard; for other corrections contact the Grievance Officer.</li>
+      <li><strong>Erasure:</strong> delete your account from the dashboard. It is soft-deleted immediately and
+      permanently erased after a 30-day grace period.</li>
+      <li><strong>Withdraw consent:</strong> withdrawing consent deletes your account (consent is our basis for processing).</li>
+    </ul>
 
-  <h2>8. Grievance Officer</h2>
-  <p>As required by the DPDP Act, you may contact our Grievance Officer for any privacy concern or to
-  exercise your rights:<br />
-  <strong>{{GRIEVANCE_OFFICER_NAME}}</strong> — <a href="mailto:{{GRIEVANCE_EMAIL}}">{{GRIEVANCE_EMAIL}}</a>.
-  We aim to respond within the timelines prescribed by law.</p>
+    <h2 id="retention">5. Retention</h2>
+    <p>Account data is retained until you delete your account (then purged after 30 days). Visitor room
+    photos and masks are purged after 30 days.</p>
 
-  <h2>9. Changes</h2>
-  <p>We will email registered shop owners when this policy materially changes and update the version above.</p>
+    <h2 id="security">6. Security</h2>
+    <p>Passwords are hashed (bcrypt). Data is transmitted over HTTPS. Database credentials are held only on
+    our backend server and never exposed to browsers or public code.</p>
 
-  <p style="margin-top:32px"><a href="terms.html">Terms of Service</a> · <a href="data-deletion.html">Data Deletion</a></p>
+    <h2 id="sharing">7. Sharing &amp; processors</h2>
+    <p>We use infrastructure processors (hosting, email delivery, object storage) solely to run the service.
+    We do not sell personal data.</p>
+
+    <h2 id="grievance">8. Grievance Officer</h2>
+    <p>As required by the DPDP Act, you may contact our Grievance Officer for any privacy concern or to
+    exercise your rights:<br />
+    <strong>{{GRIEVANCE_OFFICER_NAME}}</strong> — <a href="mailto:{{GRIEVANCE_EMAIL}}">{{GRIEVANCE_EMAIL}}</a>.
+    We aim to respond within the timelines prescribed by law.</p>
+
+    <h2 id="changes">9. Changes</h2>
+    <p>We will email registered shop owners when this policy materially changes and update the version above.</p>
+
+    <div class="legal-cta">
+      <h3>Questions about your data?</h3>
+      <p>Our Grievance Officer responds within the timelines required by the DPDP Act.</p>
+      <a href="mailto:{{GRIEVANCE_EMAIL}}" class="btn-primary">Email {{GRIEVANCE_EMAIL}}</a>
+    </div>
+  </div>
 </div>
+
+<footer class="legal-footer">
+  <a href="terms.html">Terms of Service</a> · <a href="data-deletion.html">Data Deletion</a>
+</footer>
 </body>
 </html>
