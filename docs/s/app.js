@@ -119,9 +119,46 @@ async function openRoom(room) {
 
 const TILE_OPACITY = 200;              // out of 255, as before
 const SHADE_MIN = 0.55, SHADE_MAX = 1.45;
-const FLOOR_TILES_ACROSS = 6;          // ~12 ft of visible floor at 2 ft per tile
 const QUAD_MIN_COVERAGE = 0.80;        // below this the fit is untrustworthy -> flat tiling
 const SS = 2;                          // 2x2 supersampling; far-field tiles alias badly without it
+
+// How many times a tile IMAGE repeats across the visible floor.
+// The tile images are photos of already-laid floors, not single tile faces: the
+// wooden image is ~12 plank rows, the subway image ~50 tiles with grout baked in.
+// So the DB `sizes` field ("3x6 in") describes one tile inside the photo and
+// cannot be converted to a scale — nothing records how many tiles a photo shows.
+// These are per-category starting points read off the actual images, assuming
+// roughly 12 ft of visible floor; the Tile size slider is the real answer for
+// owner-uploaded tiles, whose scale we can never know.
+const DEFAULT_REPEATS = {
+  wooden:    1.5,   // image is ~8 ft of planks
+  ceramic:   5,     // image is ~2.5 ft of subway/azulejo
+  marble:    3,     // image reads as a ~4 ft slab face
+  granite:   3,
+  vitrified: 3,
+  anti_skid: 3,
+};
+const FALLBACK_REPEATS = 3;
+const SCALE_MIN = 0.25, SCALE_MAX = 4;  // slider multiplies the default by this range
+
+let tileScale = 1;                      // 1 = category default; driven by the slider
+
+function defaultRepeats(tile) {
+  // Guard with a ternary, not `tile &&`: that yields null for a null tile, which
+  // slips past an `undefined` check and would zero out the repeat count.
+  const d = tile ? DEFAULT_REPEATS[tile.category] : undefined;
+  return typeof d === 'number' && d > 0 ? d : FALLBACK_REPEATS;
+}
+
+// Slider 0..100 -> multiplier SCALE_MIN..SCALE_MAX, geometric so 50 lands on 1.0
+// and each end feels like an equal step rather than one end being squashed.
+function sliderToScale(v) {
+  const t = v / 100;
+  return SCALE_MIN * Math.pow(SCALE_MAX / SCALE_MIN, t);
+}
+function scaleToSlider(s) {
+  return 100 * Math.log(s / SCALE_MIN) / Math.log(SCALE_MAX / SCALE_MIN);
+}
 
 // Depends only on the room + surface, not on the tile, so it survives tile clicks.
 let surfaceCache = null;
@@ -315,6 +352,8 @@ function renderCanvas() {
     surfaceCache = buildSurfaceCache(W, H);
   }
   const soft = surfaceCache.soft, shade = surfaceCache.shade, hom = surfaceCache.hom;
+  // Larger tileScale means physically bigger tiles, so the image repeats fewer times.
+  const repeats = defaultRepeats(selectedTile) / tileScale;
 
   const TS = 128;
   const tc = document.createElement('canvas');
@@ -328,8 +367,13 @@ function renderCanvas() {
   let od;
 
   if (!hom) {
-    // No trustworthy floor plane (walls, or a mask we couldn't fit): tile flat.
-    octx.fillStyle = octx.createPattern(tc, 'repeat');
+    // No trustworthy floor plane (walls, or a mask we couldn't fit): tile flat,
+    // but still honour the size slider so the control does something everywhere.
+    const step = Math.max(8, Math.round(W / repeats));
+    const fc = document.createElement('canvas');
+    fc.width = step; fc.height = step;
+    fc.getContext('2d').drawImage(selectedTile._img, 0, 0, step, step);
+    octx.fillStyle = octx.createPattern(fc, 'repeat');
     octx.fillRect(0, 0, W, H);
     od = octx.getImageData(0, 0, W, H);
   } else {
@@ -364,7 +408,7 @@ function renderCanvas() {
         for (let sy = 0; sy < SS; sy++) {
           for (let sx = 0; sx < SS; sx++) {
             const uv = applyHomography(hom, x + (sx + 0.5) / SS, y + (sy + 0.5) / SS);
-            sample(uv[0] * FLOOR_TILES_ACROSS, uv[1] * FLOOR_TILES_ACROSS, acc);
+            sample(uv[0] * repeats, uv[1] * repeats, acc);
           }
         }
         const n = SS * SS;
@@ -493,6 +537,17 @@ function bindEvents() {
     selectedRoom = null; selectedTile = null; maskImages = {}; roomPhoto = null; surfaceCache = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     history.replaceState(null, '', '?shop=' + slug);
+  });
+  // Tile size: re-render only. Scale never touches the mask or shading, so the
+  // surface cache stays valid and dragging stays cheap.
+  document.getElementById('tile-scale').addEventListener('input', e => {
+    tileScale = sliderToScale(+e.target.value);
+    renderCanvas();
+  });
+  document.getElementById('scale-reset').addEventListener('click', () => {
+    tileScale = 1;
+    document.getElementById('tile-scale').value = scaleToSlider(1);
+    renderCanvas();
   });
   document.getElementById('surface-toggle').addEventListener('click', e => {
     const btn = e.target.closest('.surface-btn');

@@ -304,6 +304,39 @@ h1, h2, h3 { font-family: var(--font-display); }
 .room-name-label { font-family: var(--font-display); font-weight: 700; font-size: 15px; flex: 1; color: var(--ink); }
 .surface-toggle { display: flex; gap: 4px; }
 
+/* Tile size — the tile images are photos of already-laid floors, so their real
+   world scale is unknowable for owner uploads. This is the visitor's dial. */
+.scale-control { display: flex; align-items: center; gap: 8px; }
+.scale-control label {
+  font-size: 12px; color: var(--muted); white-space: nowrap; letter-spacing: .02em;
+}
+.scale-control input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 108px; height: 4px; border-radius: 999px; cursor: pointer;
+  background: var(--line); outline: none;
+}
+.scale-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); border: 0; cursor: pointer;
+}
+.scale-control input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); border: 0; cursor: pointer;
+}
+.scale-control input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.scale-reset {
+  background: none; border: 0; padding: 2px 4px; cursor: pointer;
+  font-size: 11px; color: var(--muted); text-decoration: underline;
+}
+.scale-reset:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+  /* Toolbar stacks on phones; let the slider take the width it needs. */
+  .scale-control { width: 100%; justify-content: space-between; }
+  .scale-control input[type="range"] { flex: 1; width: auto; }
+}
+
 .canvas-wrapper {
   position: relative; display: flex; align-items: center; justify-content: center;
   min-height: 400px; background: var(--ink); padding: 20px;

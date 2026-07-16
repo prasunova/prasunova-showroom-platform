@@ -48,6 +48,12 @@
           <button class="surface-btn active" data-surface="floor">Floor</button>
           <button class="surface-btn" data-surface="wall">Wall</button>
         </div>
+        <div id="scale-control" class="scale-control">
+          <label for="tile-scale">Tile size</label>
+          <input type="range" id="tile-scale" min="0" max="100" value="50" step="1"
+                 aria-label="Tile size" />
+          <button id="scale-reset" class="scale-reset" type="button" title="Reset to default size">Reset</button>
+        </div>
       </div>
       <div class="canvas-wrapper">
         <div id="canvas-loading" class="canvas-overlay hidden"><div class="spinner"></div></div>
