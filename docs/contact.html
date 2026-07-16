@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — PrasuNova Showroom</title>
+  <meta name="description" content="Questions or feedback about PrasuNova Showroom? Send us a message." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 22px; }
+    .contact-field { display: flex; flex-direction: column; gap: 6px; }
+    .contact-field label { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+    .contact-field input,
+    .contact-field textarea {
+      width: 100%; box-sizing: border-box;
+      padding: 11px 13px; font: inherit; font-size: 15px;
+      color: var(--ink); background: var(--surface-raised, #fff);
+      border: 1px solid var(--glass-border, rgba(30,28,25,.14)); border-radius: 10px;
+      outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .contact-field textarea { resize: vertical; min-height: 130px; line-height: 1.5; }
+    .contact-field input:focus,
+    .contact-field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--focus-ring, rgba(168,67,42,.35));
+    }
+    /* Honeypot — hidden from real users, catches bots that fill every field. */
+    .contact-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .contact-form button { align-self: flex-start; margin-top: 4px; }
+    .contact-form button[disabled] { opacity: .6; cursor: default; }
+    #contact-msg { margin-top: 14px; font-size: 14.5px; min-height: 20px; }
+    #contact-msg.ok  { color: #1b7a3d; }
+    #contact-msg.err { color: var(--accent); }
+  </style>
+</head>
+<body class="site-glass">
+<header class="legal-header">
+  <a href="/" class="back-btn"><span class="back-btn-arrow">←</span><span class="back-btn-full">Back to showroom</span><span class="back-btn-short">Showroom</span></a>
+  <span class="legal-header-brand">PrasuNova Showroom</span>
+</header>
+
+<div class="legal-shell no-toc">
+  <div class="legal-doc">
+    <h1>Contact us</h1>
+    <p class="legal-meta">Questions, feedback, or need a hand? Send a message and we'll get back to you by email.</p>
+
+    <form class="contact-form" id="contact-form" autocomplete="on" novalidate>
+      <div class="contact-field">
+        <label for="c-name">Your name</label>
+        <input type="text" id="c-name" name="name" maxlength="120" required />
+      </div>
+      <div class="contact-field">
+        <label for="c-email">Your email</label>
+        <input type="email" id="c-email" name="email" maxlength="200" required />
+      </div>
+      <div class="contact-field">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" name="message" maxlength="5000" required></textarea>
+      </div>
+      <!-- honeypot: keep empty -->
+      <div class="contact-hp" aria-hidden="true">
+        <label for="c-company">Company (leave blank)</label>
+        <input type="text" id="c-company" name="company" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="submit" class="btn-primary" id="contact-submit">Send message</button>
+    </form>
+    <p id="contact-msg" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<footer class="legal-footer">
+  <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a>
+</footer>
+
+<script type="module">
+  import { API_BASE } from './config.js';
+
+  const form   = document.getElementById('contact-form');
+  const btn    = document.getElementById('contact-submit');
+  const msgEl  = document.getElementById('contact-msg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msgEl.textContent = ''; msgEl.className = '';
+
+    const name    = document.getElementById('c-name').value.trim();
+    const email   = document.getElementById('c-email').value.trim();
+    const message = document.getElementById('c-message').value.trim();
+    const company = document.getElementById('c-company').value;
+
+    if (!name || !email || !message) {
+      msgEl.textContent = 'Please fill in your name, email, and message.';
+      msgEl.className = 'err';
+      return;
+    }
+
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = 'Sending…';
+    try {
+      const res  = await fetch(`${API_BASE}/api/tile/auth/contact`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message, company }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        form.reset();
+        msgEl.textContent = 'Thanks! Your message has been sent — we\'ll reply by email soon.';
+        msgEl.className = 'ok';
+      } else {
+        msgEl.textContent = data.error || 'Something went wrong. Please try again.';
+        msgEl.className = 'err';
+      }
+    } catch {
+      msgEl.textContent = 'Network error. Please check your connection and try again.';
+      msgEl.className = 'err';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  });
+</script>
+</body>
+</html>
