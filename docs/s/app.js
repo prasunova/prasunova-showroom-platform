@@ -154,6 +154,45 @@ function blurChannel(src, W, H, radius) {
   return out;
 }
 
+// Solves the 8-DOF projective transform taking the four src points to the four
+// dst points. Canvas 2D's own setTransform is affine only, so it cannot do this.
+function solveHomography(src, dst) {
+  const A = [], b = [];
+  for (let i = 0; i < 4; i++) {
+    const x = src[i][0], y = src[i][1], u = dst[i][0], v = dst[i][1];
+    A.push([x, y, 1, 0, 0, 0, -x * u, -y * u]); b.push(u);
+    A.push([0, 0, 0, x, y, 1, -x * v, -y * v]); b.push(v);
+  }
+  // Gaussian elimination with partial pivoting on the 8x8 system.
+  for (let col = 0; col < 8; col++) {
+    let piv = col;
+    for (let r = col + 1; r < 8; r++) if (Math.abs(A[r][col]) > Math.abs(A[piv][col])) piv = r;
+    if (Math.abs(A[piv][col]) < 1e-10) return null;           // singular / degenerate
+    const tA = A[col]; A[col] = A[piv]; A[piv] = tA;
+    const tb = b[col]; b[col] = b[piv]; b[piv] = tb;
+    const d = A[col][col];
+    for (let c2 = col; c2 < 8; c2++) A[col][c2] /= d;
+    b[col] /= d;
+    for (let r = 0; r < 8; r++) {
+      if (r === col) continue;
+      const f = A[r][col];
+      if (f === 0) continue;
+      for (let c2 = col; c2 < 8; c2++) A[r][c2] -= f * A[col][c2];
+      b[r] -= f * b[col];
+    }
+  }
+  const Hm = new Float64Array(9);
+  for (let i = 0; i < 8; i++) Hm[i] = b[i];
+  Hm[8] = 1;
+  return Hm;
+}
+
+function applyHomography(Hm, x, y) {
+  const w = Hm[6] * x + Hm[7] * y + Hm[8];
+  if (Math.abs(w) < 1e-12) return [0, 0];
+  return [(Hm[0] * x + Hm[1] * y + Hm[2]) / w, (Hm[3] * x + Hm[4] * y + Hm[5]) / w];
+}
+
 // Feathered mask + per-pixel shading factors for the active surface.
 function buildSurfaceCache(W, H) {
   const roomData = ctx.getImageData(0, 0, W, H).data;
