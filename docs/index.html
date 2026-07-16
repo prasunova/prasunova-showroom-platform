@@ -184,9 +184,17 @@
       .flow-line { top: 0; bottom: 0; left: -20px; right: auto; width: 2px; height: auto; }
       .flow-line-fill { width: 100%; height: 0%; transition: height 1.4s ease; }
       .flow.in-view .flow-line-fill { height: 100%; }
-      .flow-step { flex-direction: row; align-items: flex-start; gap: 16px; padding-bottom: 30px; }
+      /* node in a fixed left column, text stacked in a shrinkable right column
+         (minmax(0,1fr) prevents the row from ever exceeding the screen width) */
+      .flow-step {
+        display: grid; grid-template-columns: 40px minmax(0, 1fr);
+        column-gap: 16px; row-gap: 4px; padding-bottom: 30px;
+      }
       .flow-step:last-child { padding-bottom: 0; }
-      .flow-node { margin-bottom: 0; margin-left: -20px; }
+      .flow-node { grid-column: 1; grid-row: 1 / span 3; margin: 0 0 0 -20px; }
+      .flow-title { grid-column: 2; margin-top: 9px; }
+      .flow-desc  { grid-column: 2; }
+      .flow-url   { grid-column: 2; }
     }
     @media (prefers-reduced-motion: reduce) {
       .flow-step, .flow-line-fill { transition: none !important; }
