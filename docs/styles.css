@@ -369,29 +369,25 @@ h1, h2, h3 { font-family: var(--font-display); }
 }
 .sidebar-header { padding: 18px 18px 4px; }
 .sidebar-header h2 { font-family: var(--font-display); font-size: 14px; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.2px; }
-/* Two-column compact swatch cards: a square material preview on top,
-   name + finish + price below. Reads as a catalogue, not a long list. */
-.tile-grid {
-  flex: 1; overflow-y: auto; align-content: start;
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px;
-}
+/* Horizontal list rows: thumbnail on the left, name + finish + price beside it. */
+.tile-grid { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; padding: 8px 10px 16px; }
 
 .tile-card {
-  display: flex; flex-direction: column;
-  border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden;
-  background: var(--surface); cursor: pointer; transition: var(--transition);
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 8px; border-radius: var(--radius-sm); border: 1px solid transparent;
+  cursor: pointer; transition: var(--transition);
 }
-.tile-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-.tile-card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.tile-card:hover { background: var(--surface-alt); }
+.tile-card.selected { background: var(--accent-tint); border-color: var(--accent); }
 .tile-thumb, .tile-thumb-placeholder {
-  width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
-  border: none; border-bottom: 1px solid var(--border); background: var(--bg-2);
+  width: 46px; height: 46px; border-radius: var(--radius-sm); flex-shrink: 0;
+  object-fit: cover; border: 1px solid var(--border); background: var(--bg-2);
 }
 .tile-thumb-placeholder { display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); text-align: center; }
-.tile-info { padding: 8px 10px 10px; min-width: 0; }
-.tile-name { font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
-.tile-finish { font-size: 10.5px; color: var(--muted); text-transform: capitalize; }
-.tile-price { font-family: var(--font-mono); font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 3px; }
+.tile-info { flex: 1; min-width: 0; }
+.tile-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
+.tile-finish { font-size: 11px; color: var(--muted); text-transform: capitalize; }
+.tile-price { font-family: var(--font-mono); font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 2px; }
 
 /* ═══════════════════════════════════════════════════════════════
    UPLOAD MODAL
@@ -593,19 +589,12 @@ h1, h2, h3 { font-family: var(--font-display); }
 .showroom-app .action-btn.primary { border-radius: 12px; box-shadow: 0 8px 16px rgba(168,67,42,.22); }
 .showroom-app .sidebar-header { padding: 20px 18px 6px; }
 .showroom-app .sidebar-header h2 { font-size: 16px; letter-spacing: -.25px; }
-.showroom-app .tile-grid { gap: 10px; padding: 12px; }
-.showroom-app .tile-card { padding: 0; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); position: relative; }
-.showroom-app .tile-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
-/* Selected tile must be unmistakable: 2px accent outline, tinted footer, and a check badge on the swatch. */
-.showroom-app .tile-card.selected { border: 2px solid var(--accent); box-shadow: 0 4px 12px rgba(108,56,36,.12); }
-.showroom-app .tile-card.selected .tile-info { background: var(--accent-tint); }
-.showroom-app .tile-card.selected::after {
-  content: "✓"; position: absolute; top: 8px; right: 8px;
-  width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff;
-  font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 6px rgba(30,28,25,.3);
-}
-.showroom-app .tile-thumb { border-radius: 0; box-shadow: none; }
+.showroom-app .tile-grid { gap: 6px; padding: 10px 12px 18px; }
+.showroom-app .tile-card { padding: 8px; border-radius: 12px; border: 1px solid transparent; position: relative; }
+.showroom-app .tile-card:hover { background: var(--surface-alt); border-color: var(--border); }
+/* Selected row: solid tint + 2px accent outline — clearly visible on the solid surface. */
+.showroom-app .tile-card.selected { background: var(--accent-tint); border: 2px solid var(--accent); }
+.showroom-app .tile-thumb { width: 52px; height: 52px; border-radius: 10px; box-shadow: 0 2px 6px rgba(42,33,26,.12); }
 .showroom-app .tile-price { color: var(--accent-deep); }
 .showroom-app .modal-overlay { background: rgba(35,31,27,.48); backdrop-filter: blur(14px) saturate(125%); }
 .showroom-app .modal { border-radius: 22px; background: var(--surface); border-color: var(--border); box-shadow: 0 26px 80px rgba(20,17,14,.28); animation: showroom-modal-in .42s var(--soft-ease) both; }
@@ -731,6 +720,11 @@ h1, h2, h3 { font-family: var(--font-display); }
 .legal-cta { margin-top: 40px; padding: 24px; border-radius: 16px; background: var(--accent-tint); border: 1px solid rgba(168,67,42,.22); }
 .legal-cta h3 { font-size: 16px; margin-bottom: 6px; }
 .legal-cta p { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; }
+/* The email button is an <a> inside .legal-doc, so `.legal-doc a` (which colours
+   body links accent-red) would otherwise win and paint red text on the red
+   button — invisible. Force the button label back to light. */
+.legal-cta .btn-primary { color: var(--accent-ink); }
+.legal-cta .btn-primary:hover { color: var(--accent-ink); }
 
 .legal-footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); }
 .legal-footer a { color: var(--muted); text-decoration: none; }
