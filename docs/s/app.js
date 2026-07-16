@@ -45,11 +45,8 @@ async function init() {
       return;
     }
     document.title = `${catalog.shopName} — Digital Showroom`;
-    const shopInitials = catalog.shopName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-    const nameEl   = document.querySelector('#logo-shop-name') || document.querySelector('.logo-name');
-    const badgeEl  = document.getElementById('logo-badge') || document.querySelector('.logo-mg');
-    if (nameEl)  nameEl.textContent  = catalog.shopName;
-    if (badgeEl) badgeEl.textContent = shopInitials;
+    const nameEl = document.querySelector('#logo-shop-name') || document.querySelector('.logo-name');
+    if (nameEl) nameEl.textContent = catalog.shopName;
     ROOMS = catalog.rooms;
     TILES = catalog.tiles;
   } catch (e) {
