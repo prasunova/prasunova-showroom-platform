@@ -2,6 +2,10 @@ import { API_BASE } from '../config.js';
 
 const TOKEN_KEY = 'showroom_admin_token';
 
+// Already signed in? Skip registration and go straight to the dashboard
+// (mirrors the login page, which shows the dashboard when a token exists).
+if (localStorage.getItem(TOKEN_KEY)) location.href = 'index.html';
+
 document.getElementById('slug').addEventListener('input', e => {
   const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
   e.target.value = val;
