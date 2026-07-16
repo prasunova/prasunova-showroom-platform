@@ -84,7 +84,7 @@ function renderRoomGallery() {
 }
 
 async function openRoom(room) {
-  selectedRoom = room; activeSurface = 'floor'; maskImages = {};
+  selectedRoom = room; activeSurface = 'floor'; maskImages = {}; surfaceCache = null;
   document.getElementById('view-gallery').className = 'view-hidden';
   document.getElementById('view-room').className    = 'view-active';
   document.getElementById('room-name-label').textContent = room.name;
@@ -117,16 +117,93 @@ async function openRoom(room) {
   updateURL();
 }
 
+const TILE_OPACITY = 200;              // out of 255, as before
+const SHADE_MIN = 0.55, SHADE_MAX = 1.45;
+
+// Depends only on the room + surface, not on the tile, so it survives tile clicks.
+let surfaceCache = null;
+
+// Separable box blur over a single-channel array, edges clamped.
+// ctx.filter = 'blur()' would do this in one line but is still not Baseline and
+// silently no-ops on some older Android browsers, so this stays in plain JS.
+function blurChannel(src, W, H, radius) {
+  const span = radius * 2 + 1;
+  const tmp = new Float32Array(W * H);
+  const out = new Float32Array(W * H);
+  const clampX = x => x < 0 ? 0 : (x > W - 1 ? W - 1 : x);
+  const clampY = y => y < 0 ? 0 : (y > H - 1 ? H - 1 : y);
+  for (let y = 0; y < H; y++) {
+    const row = y * W;
+    let sum = 0;
+    for (let x = -radius; x <= radius; x++) sum += src[row + clampX(x)];
+    for (let x = 0; x < W; x++) {
+      tmp[row + x] = sum / span;
+      sum -= src[row + clampX(x - radius)];
+      sum += src[row + clampX(x + radius + 1)];
+    }
+  }
+  for (let x = 0; x < W; x++) {
+    let sum = 0;
+    for (let y = -radius; y <= radius; y++) sum += tmp[clampY(y) * W + x];
+    for (let y = 0; y < H; y++) {
+      out[y * W + x] = sum / span;
+      sum -= tmp[clampY(y - radius) * W + x];
+      sum += tmp[clampY(y + radius + 1) * W + x];
+    }
+  }
+  return out;
+}
+
+// Feathered mask + per-pixel shading factors for the active surface.
+function buildSurfaceCache(W, H) {
+  const roomData = ctx.getImageData(0, 0, W, H).data;
+
+  const mc = document.createElement('canvas');
+  mc.width = W; mc.height = H;
+  const mctx = mc.getContext('2d');
+  mctx.drawImage(maskImages[activeSurface], 0, 0, W, H);
+  const maskData = mctx.getImageData(0, 0, W, H).data;
+
+  const px = W * H;
+  const hard = new Float32Array(px);
+  const lum  = new Float32Array(px);
+  let lumSum = 0, lumCount = 0;
+  for (let p = 0; p < px; p++) {
+    const i = p * 4;
+    const inside = maskData[i] > 127 ? 1 : 0;
+    hard[p] = inside;
+    const l = 0.299 * roomData[i] + 0.587 * roomData[i+1] + 0.114 * roomData[i+2];
+    lum[p] = l;
+    if (inside) { lumSum += l; lumCount++; }
+  }
+  const meanLum = lumCount ? lumSum / lumCount : 128;
+
+  const radius = Math.max(1, Math.round(Math.min(W, H) / 300));
+  const soft = blurChannel(hard, W, H, radius);
+
+  // Relative shading only: dividing by the surface's own mean luminance keeps the
+  // tile's true brightness and transfers just the room's shadows and highlights.
+  const shade = new Float32Array(px);
+  for (let p = 0; p < px; p++) {
+    const s = meanLum > 1 ? lum[p] / meanLum : 1;
+    shade[p] = s < SHADE_MIN ? SHADE_MIN : (s > SHADE_MAX ? SHADE_MAX : s);
+  }
+  return { surface: activeSurface, W, H, soft, shade };
+}
+
 function renderCanvas() {
   if (!roomPhoto) return;
   const W = canvas.width, H = canvas.height;
   ctx.clearRect(0, 0, W, H);
   ctx.drawImage(roomPhoto, 0, 0, W, H);
   if (!selectedTile || !maskImages[activeSurface]) return;
-  const mc = document.createElement('canvas');
-  mc.width = W; mc.height = H;
-  mc.getContext('2d').drawImage(maskImages[activeSurface], 0, 0, W, H);
-  const maskData = mc.getContext('2d').getImageData(0, 0, W, H);
+
+  if (!surfaceCache || surfaceCache.surface !== activeSurface ||
+      surfaceCache.W !== W || surfaceCache.H !== H) {
+    surfaceCache = buildSurfaceCache(W, H);
+  }
+  const { soft, shade } = surfaceCache;
+
   const tc = document.createElement('canvas');
   tc.width = 96; tc.height = 96;
   tc.getContext('2d').drawImage(selectedTile._img, 0, 0, 96, 96);
@@ -136,8 +213,15 @@ function renderCanvas() {
   octx.fillStyle = octx.createPattern(tc, 'repeat');
   octx.fillRect(0, 0, W, H);
   const od = octx.getImageData(0, 0, W, H);
-  for (let i = 0; i < maskData.data.length; i += 4) {
-    od.data[i+3] = maskData.data[i] > 127 ? 200 : 0;
+  for (let p = 0, px = W * H; p < px; p++) {
+    const a = soft[p];
+    const i = p * 4;
+    if (a <= 0.002) { od.data[i+3] = 0; continue; }
+    const s = shade[p];
+    od.data[i]   *= s;
+    od.data[i+1] *= s;
+    od.data[i+2] *= s;
+    od.data[i+3] = a * TILE_OPACITY;
   }
   octx.putImageData(od, 0, 0);
   ctx.drawImage(oc, 0, 0);
@@ -250,7 +334,7 @@ function bindEvents() {
   document.getElementById('btn-back').addEventListener('click', () => {
     document.getElementById('view-room').className    = 'view-hidden';
     document.getElementById('view-gallery').className = 'view-active';
-    selectedRoom = null; selectedTile = null; maskImages = {}; roomPhoto = null;
+    selectedRoom = null; selectedTile = null; maskImages = {}; roomPhoto = null; surfaceCache = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     history.replaceState(null, '', '?shop=' + slug);
   });
