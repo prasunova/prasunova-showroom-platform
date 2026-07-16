@@ -20,7 +20,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"PrasuNova Showroom","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://showroom.prasunova.com/","description":"Digital tile showroom and AI tile visualizer for tile and granite shops. Customers preview real tiles on their own room photos from a branded link."}
   </script>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23A8432A'/%3E%3Ctext x='32' y='44' font-family='Arial,Helvetica,sans-serif' font-size='30' font-weight='700' fill='%23F1EFEA' text-anchor='middle'%3EPN%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* ═══ NAV ═════════════════════════════════════════════════════════════ */
@@ -37,10 +37,8 @@
     }
     .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .nav-logo-badge {
-      width: 38px; height: 38px; border-radius: var(--radius);
-      background: var(--ink);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--bg);
+      width: 42px; height: 42px; border-radius: var(--radius);
+      object-fit: contain; display: block;
     }
     .nav-logo-text { display: flex; flex-direction: column; line-height: 1.25; }
     .nav-logo-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink); }
@@ -335,7 +333,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <div class="nav-logo-badge">PN</div>
+      <img class="nav-logo-badge" src="/assets/logo.png" alt="PrasuNova Showroom logo" />
       <div class="nav-logo-text">
         <span class="nav-logo-name">PrasuNova Showroom</span>
         <span class="nav-logo-sub">Tile Visualizer</span>
