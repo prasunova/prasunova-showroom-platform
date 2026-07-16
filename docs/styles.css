@@ -744,6 +744,7 @@ h1, h2, h3 { font-family: var(--font-display); }
   border-bottom: 1px solid var(--border); box-shadow: 0 6px 20px rgba(44,35,26,.05);
 }
 .admin-glass .admin-header-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.admin-glass .admin-header-left > div { min-width: 0; }
 .admin-glass .admin-header-shop { font-family: var(--font-display); font-weight: 800; font-size: 16px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .admin-glass .admin-header-link { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); text-decoration: none; word-break: break-all; }
 .admin-glass .admin-header-link:hover { color: var(--accent); }
