@@ -793,6 +793,7 @@ h1, h2, h3 { font-family: var(--font-display); }
 }
 @media (max-width: 600px) {
   .admin-glass .admin-header-link { display: none; }
+  .admin-glass .admin-header-right .profile-plan-badge { display: none; }
   .admin-glass .admin-workspace, .admin-glass .admin-account { padding-left: 12px; padding-right: 12px; }
 }
 
