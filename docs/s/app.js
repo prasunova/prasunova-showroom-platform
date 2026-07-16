@@ -119,6 +119,9 @@ async function openRoom(room) {
 
 const TILE_OPACITY = 200;              // out of 255, as before
 const SHADE_MIN = 0.55, SHADE_MAX = 1.45;
+const FLOOR_TILES_ACROSS = 6;          // ~12 ft of visible floor at 2 ft per tile
+const QUAD_MIN_COVERAGE = 0.80;        // below this the fit is untrustworthy -> flat tiling
+const SS = 2;                          // 2x2 supersampling; far-field tiles alias badly without it
 
 // Depends only on the room + surface, not on the tile, so it survives tile clicks.
 let surfaceCache = null;
@@ -286,7 +289,18 @@ function buildSurfaceCache(W, H) {
     const s = meanLum > 1 ? lum[p] / meanLum : 1;
     shade[p] = s < SHADE_MIN ? SHADE_MIN : (s > SHADE_MAX ? SHADE_MAX : s);
   }
-  return { surface: activeSurface, W, H, soft, shade };
+  // Only the floor is a ground plane; the trapezoid model does not describe walls.
+  let Hm = null, quadCoverage = 0;
+  if (activeSurface === 'floor') {
+    const fit = fitFloorQuad(hard, W, H);
+    if (fit && fit.coverage >= QUAD_MIN_COVERAGE) {
+      quadCoverage = fit.coverage;
+      // Map image -> tile plane directly, which is the direction the pixel loop needs.
+      Hm = solveHomography(fit.quad, [[0, 0], [1, 0], [1, 1], [0, 1]]);
+    }
+  }
+
+  return { surface: activeSurface, W, H, soft, shade, hom: Hm, quadCoverage };
 }
 
 function renderCanvas() {
@@ -300,26 +314,70 @@ function renderCanvas() {
       surfaceCache.W !== W || surfaceCache.H !== H) {
     surfaceCache = buildSurfaceCache(W, H);
   }
-  const { soft, shade } = surfaceCache;
+  const soft = surfaceCache.soft, shade = surfaceCache.shade, hom = surfaceCache.hom;
 
+  const TS = 128;
   const tc = document.createElement('canvas');
-  tc.width = 96; tc.height = 96;
-  tc.getContext('2d').drawImage(selectedTile._img, 0, 0, 96, 96);
+  tc.width = TS; tc.height = TS;
+  tc.getContext('2d').drawImage(selectedTile._img, 0, 0, TS, TS);
+  const tex = tc.getContext('2d').getImageData(0, 0, TS, TS).data;
+
   const oc = document.createElement('canvas');
   oc.width = W; oc.height = H;
   const octx = oc.getContext('2d');
-  octx.fillStyle = octx.createPattern(tc, 'repeat');
-  octx.fillRect(0, 0, W, H);
-  const od = octx.getImageData(0, 0, W, H);
-  for (let p = 0, px = W * H; p < px; p++) {
-    const a = soft[p];
-    const i = p * 4;
-    if (a <= 0.002) { od.data[i+3] = 0; continue; }
-    const s = shade[p];
-    od.data[i]   *= s;
-    od.data[i+1] *= s;
-    od.data[i+2] *= s;
-    od.data[i+3] = a * TILE_OPACITY;
+  let od;
+
+  if (!hom) {
+    // No trustworthy floor plane (walls, or a mask we couldn't fit): tile flat.
+    octx.fillStyle = octx.createPattern(tc, 'repeat');
+    octx.fillRect(0, 0, W, H);
+    od = octx.getImageData(0, 0, W, H);
+  } else {
+    od = octx.createImageData(W, H);
+  }
+
+  // Bilinear sample of the tile texture at wrapped tile-plane coords.
+  function sample(u, v, out) {
+    const fx = (u - Math.floor(u)) * TS - 0.5, fy = (v - Math.floor(v)) * TS - 0.5;
+    const x0 = Math.floor(fx), y0 = Math.floor(fy);
+    const dx = fx - x0, dy = fy - y0;
+    const xa = ((x0 % TS) + TS) % TS, xb = (((x0 + 1) % TS) + TS) % TS;
+    const ya = ((y0 % TS) + TS) % TS, yb = (((y0 + 1) % TS) + TS) % TS;
+    const i00 = (ya * TS + xa) * 4, i10 = (ya * TS + xb) * 4;
+    const i01 = (yb * TS + xa) * 4, i11 = (yb * TS + xb) * 4;
+    const w00 = (1 - dx) * (1 - dy), w10 = dx * (1 - dy);
+    const w01 = (1 - dx) * dy, w11 = dx * dy;
+    for (let c = 0; c < 3; c++) {
+      out[c] += tex[i00 + c] * w00 + tex[i10 + c] * w10 + tex[i01 + c] * w01 + tex[i11 + c] * w11;
+    }
+  }
+
+  const acc = [0, 0, 0];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const p = y * W + x, i = p * 4;
+      const a = soft[p];
+      if (a <= 0.002) { od.data[i + 3] = 0; continue; }
+      const s = shade[p];
+      if (hom) {
+        acc[0] = acc[1] = acc[2] = 0;
+        for (let sy = 0; sy < SS; sy++) {
+          for (let sx = 0; sx < SS; sx++) {
+            const uv = applyHomography(hom, x + (sx + 0.5) / SS, y + (sy + 0.5) / SS);
+            sample(uv[0] * FLOOR_TILES_ACROSS, uv[1] * FLOOR_TILES_ACROSS, acc);
+          }
+        }
+        const n = SS * SS;
+        od.data[i]     = acc[0] / n * s;
+        od.data[i + 1] = acc[1] / n * s;
+        od.data[i + 2] = acc[2] / n * s;
+      } else {
+        od.data[i]     *= s;
+        od.data[i + 1] *= s;
+        od.data[i + 2] *= s;
+      }
+      od.data[i + 3] = a * TILE_OPACITY;
+    }
   }
   octx.putImageData(od, 0, 0);
   ctx.drawImage(oc, 0, 0);
